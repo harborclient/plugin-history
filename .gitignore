@@ -1,0 +1,4 @@
+node_modules/
+dist/
+*.hcp
+pnpm-lock.yaml

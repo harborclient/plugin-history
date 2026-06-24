@@ -1,0 +1,19 @@
+{
+  "name": "harborclient-plugin-history",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/build.mjs --watch",
+    "test": "vitest run",
+    "pack": "pnpm build && zip -r request-history.hcp manifest.json README.md dist"
+  },
+  "devDependencies": {
+    "@harborclient/plugin-api": "file:../harborclient/packages/plugin-api",
+    "@types/react": "^19.0.0",
+    "esbuild": "^0.25.0",
+    "typescript": "^5.8.0",
+    "vitest": "^3.2.0"
+  }
+}

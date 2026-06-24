@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react",
+    "jsxFactory": "ReactHost.createElement",
+    "jsxFragmentFactory": "ReactHost.Fragment",
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "lib": ["ES2022", "DOM"],
+    "types": ["react"]
+  },
+  "include": ["src/**/*"]
+}
