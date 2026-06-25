@@ -6,7 +6,7 @@
   "files": [
     {
       "path": ".gitignore",
-      "sha256": "58540b33cb4fd7f79ada12d5af687f4b4bc09a1df6b1b20cc11c8146b9b37e66"
+      "sha256": "a77b3b374f4f33571c4fb2083bc43ce38201d0f497ebd1723ecb6ca21c1d943f"
     },
     {
       "path": "dist/renderer.js",
@@ -93,5 +93,5 @@
       "sha256": "aa7858f05b2261348f1502fa076550b0930672e0df3f054a22e8a8d9b68fb32e"
     }
   ],
-  "signature": "FQTHWwJ1Ui/CtfkAFm2lmXn+dQAJ8Df/HpIqE+LPbILiljrYQiE9ZSzzjy4Zmo99v3CZGkMKTHdN2LtxqsGdCw=="
+  "signature": "HOhE+BJQrsxTaVqN8kOCRRzHWjZ/mZ4bgp7Kg0n7+AIP8yDCGmpCCtxTMgNh44Ehe+ji6XuK5kGzI6w0kRzjDg=="
 }
