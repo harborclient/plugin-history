@@ -1,9 +1,5 @@
 import type { PluginStorage } from "@harborclient/plugin-api";
-import {
-  IPC_PULL_PENDING,
-  PLUGIN_ID,
-  STORAGE_KEY,
-} from "../shared/constants.js";
+import { IPC_PULL_PENDING, STORAGE_KEY } from "../shared/constants.js";
 import {
   mergeHistoryEntries,
   type HistoryEntry,
@@ -18,7 +14,7 @@ import {
  */
 export async function syncPendingEntries(
   storage: PluginStorage,
-  pluginId: string = PLUGIN_ID
+  pluginId: string
 ): Promise<HistoryEntry[] | null> {
   const raw = await window.api.invokePluginMain(pluginId, IPC_PULL_PENDING, []);
   if (!Array.isArray(raw) || raw.length === 0) {

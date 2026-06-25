@@ -1,5 +1,9 @@
-import { ReactHost } from "./reactHost.js";
-import type { PluginStorage } from "@harborclient/plugin-api";
+import {
+  useCallback,
+  useEffect,
+  useState,
+} from "@harborclient/plugin-api/react";
+import type { PluginContext } from "@harborclient/plugin-api";
 import type { HistoryEntry } from "../shared/historyEntry.js";
 import { HistoryEntryRow } from "./HistoryEntryRow.js";
 import {
@@ -8,30 +12,18 @@ import {
   syncPendingEntries,
 } from "./historyStorage.js";
 
-/** React hooks supplied by the host via hc.react. */
-export interface HistoryPanelHooks {
-  useState: typeof import("react").useState;
-  useEffect: typeof import("react").useEffect;
-  useCallback: typeof import("react").useCallback;
-}
-
 interface Props {
   /**
-   * Plugin-scoped persistent storage.
+   * Renderer plugin context from the host.
    */
-  storage: PluginStorage;
-
-  /**
-   * React hooks from hc.react — do not bundle React in the plugin.
-   */
-  hooks: HistoryPanelHooks;
+  hc: PluginContext;
 }
 
 /**
  * Footer History panel: syncs captured requests and renders a persistent list.
  */
-export function HistoryPanel({ storage, hooks }: Props) {
-  const { useState, useEffect, useCallback } = hooks;
+export function HistoryPanel({ hc }: Props) {
+  const { storage, pluginId } = hc;
 
   const [entries, setEntries] = useState<HistoryEntry[]>([]);
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -42,13 +34,13 @@ export function HistoryPanel({ storage, hooks }: Props) {
    * Loads storage and pulls any pending captures from the main entry.
    */
   const refresh = useCallback(async (): Promise<void> => {
-    const merged = await syncPendingEntries(storage);
+    const merged = await syncPendingEntries(storage, pluginId);
     if (merged) {
       setEntries(merged);
       return;
     }
     setEntries(await loadHistoryEntries(storage));
-  }, [storage, setEntries]);
+  }, [storage, pluginId, setEntries]);
 
   /**
    * Loads history when the panel mounts and polls while visible.

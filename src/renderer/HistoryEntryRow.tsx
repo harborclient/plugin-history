@@ -1,4 +1,3 @@
-import { ReactHost } from "./reactHost.js";
 import type { HistoryEntry } from "../shared/historyEntry.js";
 
 /** Tailwind classes for HTTP method badges matching HarborClient tokens. */

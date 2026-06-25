@@ -13,9 +13,9 @@ const rendererOptions = {
   entryPoints: ["src/renderer/index.tsx"],
   outfile: "dist/renderer.js",
   platform: "browser",
-  jsx: "transform",
-  jsxFactory: "ReactHost.createElement",
-  jsxFragment: "ReactHost.Fragment",
+  jsx: "automatic",
+  jsxImportSource: "@harborclient/plugin-api",
+  external: ["react", "react-dom"],
 };
 
 const contexts = await Promise.all([
