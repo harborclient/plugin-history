@@ -1,6 +1,6 @@
 {
   "name": "@harborclient/plugin-history",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",
