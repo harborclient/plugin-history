@@ -1,34 +1,9 @@
+import {
+  formatHeaders,
+  methodColorClass,
+  statusColorClass,
+} from "@harborclient/plugin-api/ui";
 import type { HistoryEntry } from "../shared/historyEntry.js";
-
-/** Tailwind classes for HTTP method badges matching HarborClient tokens. */
-const METHOD_CLASSES: Record<string, string> = {
-  get: "text-method-get",
-  post: "text-method-post",
-  put: "text-method-put",
-  patch: "text-method-patch",
-  delete: "text-method-delete",
-  head: "text-method-head",
-  options: "text-method-options",
-};
-
-/**
- * Status dot color class for an HTTP response code.
- *
- * @param status - HTTP status code.
- * @returns Tailwind background utility class.
- */
-function statusDotClass(status: number): string {
-  if (status >= 200 && status < 300) {
-    return "bg-success";
-  }
-  if (status >= 300 && status < 400) {
-    return "bg-warning";
-  }
-  if (status >= 400) {
-    return "bg-danger";
-  }
-  return "bg-info";
-}
 
 interface Props {
   /**
@@ -48,24 +23,10 @@ interface Props {
 }
 
 /**
- * Formats a header map as plain text lines.
- *
- * @param headers - Flat header key/value map.
- * @returns Multi-line header text.
- */
-function formatHeaders(headers: Record<string, string>): string {
-  const lines = Object.entries(headers).map(
-    ([key, value]) => `${key}: ${value}`
-  );
-  return lines.length > 0 ? lines.join("\n") : "(none)";
-}
-
-/**
  * One expandable row in the History footer panel.
  */
 export function HistoryEntryRow({ entry, expanded, onToggle }: Props) {
-  const methodClass =
-    METHOD_CLASSES[entry.method.toLowerCase()] ?? METHOD_CLASSES.get;
+  const methodClass = methodColorClass(entry.method);
   const statusLabel = `${entry.status} ${entry.statusText}`;
   const detailsId = `history-entry-${entry.id}-details`;
 
@@ -79,7 +40,7 @@ export function HistoryEntryRow({ entry, expanded, onToggle }: Props) {
         onClick={onToggle}
       >
         <span
-          className={`inline-block h-2 w-2 shrink-0 rounded-full ${statusDotClass(
+          className={`inline-block h-2 w-2 shrink-0 rounded-full ${statusColorClass(
             entry.status
           )}`}
           aria-hidden="true"

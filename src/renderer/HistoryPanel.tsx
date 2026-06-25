@@ -1,16 +1,12 @@
 import {
   useCallback,
-  useEffect,
   useState,
+  useSyncExternalStore,
 } from "@harborclient/plugin-api/react";
 import type { PluginContext } from "@harborclient/plugin-api";
-import type { HistoryEntry } from "../shared/historyEntry.js";
 import { HistoryEntryRow } from "./HistoryEntryRow.js";
-import {
-  clearHistoryEntries,
-  loadHistoryEntries,
-  syncPendingEntries,
-} from "./historyStorage.js";
+import { clearHistoryEntries, saveHistoryEntries } from "./historyStorage.js";
+import { historyStore } from "./historyStore.js";
 
 interface Props {
   /**
@@ -20,53 +16,19 @@ interface Props {
 }
 
 /**
- * Footer History panel: syncs captured requests and renders a persistent list.
+ * Footer History panel: renders captured requests from the module store.
  */
 export function HistoryPanel({ hc }: Props) {
-  const { storage, pluginId } = hc;
+  const { storage } = hc;
 
-  const [entries, setEntries] = useState<HistoryEntry[]>([]);
+  const entries = useSyncExternalStore(
+    historyStore.subscribe,
+    historyStore.getSnapshot,
+    () => []
+  );
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [confirmClear, setConfirmClear] = useState(false);
   const [busy, setBusy] = useState(false);
-
-  /**
-   * Loads storage and pulls any pending captures from the main entry.
-   */
-  const refresh = useCallback(async (): Promise<void> => {
-    const merged = await syncPendingEntries(storage, pluginId);
-    if (merged) {
-      setEntries(merged);
-      return;
-    }
-    setEntries(await loadHistoryEntries(storage));
-  }, [storage, pluginId, setEntries]);
-
-  /**
-   * Loads history when the panel mounts and polls while visible.
-   */
-  useEffect(() => {
-    let active = true;
-
-    /**
-     * Refreshes entries when the panel is still mounted.
-     */
-    const runRefresh = (): void => {
-      void refresh().catch(() => {
-        if (active) {
-          // Ignore transient sync errors; next poll retries.
-        }
-      });
-    };
-
-    runRefresh();
-    const interval = window.setInterval(runRefresh, 1000);
-
-    return () => {
-      active = false;
-      window.clearInterval(interval);
-    };
-  }, [refresh]);
 
   /**
    * Clears all persisted history after confirmation.
@@ -75,23 +37,20 @@ export function HistoryPanel({ hc }: Props) {
     setBusy(true);
     try {
       await clearHistoryEntries(storage);
-      setEntries([]);
+      historyStore.setState([]);
       setExpandedId(null);
       setConfirmClear(false);
     } finally {
       setBusy(false);
     }
-  }, [storage, setEntries, setExpandedId, setConfirmClear, setBusy]);
+  }, [storage]);
 
   /**
    * Toggles expanded state for one history row.
    */
-  const toggleExpanded = useCallback(
-    (id: string): void => {
-      setExpandedId((current) => (current === id ? null : id));
-    },
-    [setExpandedId]
-  );
+  const toggleExpanded = useCallback((id: string): void => {
+    setExpandedId((current) => (current === id ? null : id));
+  }, []);
 
   return (
     <div className="flex h-full min-h-0 flex-col bg-control">

@@ -1,3 +1,9 @@
+import {
+  randomId,
+  truncateBody as truncateBodyBytes,
+} from "@harborclient/plugin-api/runtime-utils";
+import { mergeById } from "@harborclient/plugin-api/storage";
+
 /**
  * Maximum bytes stored per request or response body before truncation.
  */
@@ -66,80 +72,14 @@ export interface HistoryEntry {
 /**
  * Creates a new unique entry id.
  *
- * Uses crypto.randomUUID when available (renderer); falls back for SES main runtime.
- *
  * @returns Unique entry id string.
  */
 export function createEntryId(): string {
-  if (typeof globalThis.crypto?.randomUUID === "function") {
-    return globalThis.crypto.randomUUID();
-  }
-  return `entry-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
-}
-
-/**
- * Returns the UTF-8 byte length of a string without relying on TextEncoder.
- *
- * Used in the SES plugin main runtime where TextEncoder is unavailable.
- *
- * @param value - String to measure.
- * @returns Byte length when encoded as UTF-8.
- */
-function utf8ByteLength(value: string): number {
-  let bytes = 0;
-  for (let index = 0; index < value.length; index += 1) {
-    const code = value.charCodeAt(index);
-    if (code <= 0x7f) {
-      bytes += 1;
-    } else if (code <= 0x7ff) {
-      bytes += 2;
-    } else if (code >= 0xd800 && code <= 0xdbff) {
-      bytes += 4;
-      index += 1;
-    } else {
-      bytes += 3;
-    }
-  }
-  return bytes;
-}
-
-/**
- * Truncates a string to a maximum UTF-8 byte length without TextEncoder.
- *
- * @param value - String to truncate.
- * @param maxBytes - Maximum UTF-8 bytes to retain.
- * @returns Truncated prefix of the input string.
- */
-function truncateUtf8Bytes(value: string, maxBytes: number): string {
-  let bytes = 0;
-  let index = 0;
-  for (; index < value.length; index += 1) {
-    const code = value.charCodeAt(index);
-    let charBytes = 1;
-    if (code <= 0x7f) {
-      charBytes = 1;
-    } else if (code <= 0x7ff) {
-      charBytes = 2;
-    } else if (code >= 0xd800 && code <= 0xdbff) {
-      charBytes = 4;
-    } else {
-      charBytes = 3;
-    }
-    if (bytes + charBytes > maxBytes) {
-      break;
-    }
-    bytes += charBytes;
-    if (charBytes === 4) {
-      index += 1;
-    }
-  }
-  return value.slice(0, index);
+  return randomId("entry");
 }
 
 /**
  * Truncates a body string to the configured byte limit.
- *
- * Avoids TextEncoder so this helper works in the SES plugin main runtime.
  *
  * @param body - Raw body text.
  * @returns Truncated body and whether truncation occurred.
@@ -148,16 +88,11 @@ export function truncateBody(body: string): {
   body: string;
   truncated: boolean;
 } {
-  if (utf8ByteLength(body) <= MAX_BODY_BYTES) {
-    return { body, truncated: false };
-  }
-  return {
-    body: `${truncateUtf8Bytes(
-      body,
-      MAX_BODY_BYTES
-    )}\n\n[truncated — body exceeded ${MAX_BODY_BYTES} bytes]`,
-    truncated: true,
-  };
+  return truncateBodyBytes(
+    body,
+    MAX_BODY_BYTES,
+    `\n\n[truncated — body exceeded ${MAX_BODY_BYTES} bytes]`
+  );
 }
 
 /**
@@ -171,20 +106,8 @@ export function mergeHistoryEntries(
   pending: HistoryEntry[],
   existing: HistoryEntry[]
 ): HistoryEntry[] {
-  if (pending.length === 0) {
-    return existing;
-  }
-  if (existing.length === 0) {
-    return pending;
-  }
-  const seen = new Set<string>();
-  const merged: HistoryEntry[] = [];
-  for (const entry of [...pending, ...existing]) {
-    if (seen.has(entry.id)) {
-      continue;
-    }
-    seen.add(entry.id);
-    merged.push(entry);
-  }
-  return merged;
+  return mergeById(pending, existing, {
+    cap: Number.MAX_SAFE_INTEGER,
+    idOf: (entry) => entry.id,
+  });
 }

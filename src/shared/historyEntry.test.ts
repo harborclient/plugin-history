@@ -24,7 +24,7 @@ describe("truncateBody", () => {
 describe("mergeHistoryEntries", () => {
   it("returns existing when pending is empty", () => {
     const existing = [{ id: "a" } as never];
-    expect(mergeHistoryEntries([], existing)).toBe(existing);
+    expect(mergeHistoryEntries([], existing)).toEqual(existing);
   });
 
   it("returns pending when existing is empty", () => {
