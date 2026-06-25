@@ -1,4 +1,4 @@
-import type { PluginStorage } from "@harborclient/plugin-api";
+import type { PluginStorage } from "@harborclient/sdk";
 import { STORAGE_KEY } from "../shared/constants.js";
 import type { HistoryEntry } from "../shared/historyEntry.js";
 

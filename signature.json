@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "com.harborclient.plugins.history",
-  "pluginVersion": "1.0.2",
+  "pluginVersion": "1.0.3",
   "algorithm": "Ed25519",
   "files": [
     {
@@ -10,19 +10,19 @@
     },
     {
       "path": "dist/renderer.js",
-      "sha256": "4f730d68c30b0ac25c6589b3beed797e8d50b3aec5dbb8c713e9a2465388e8b7"
+      "sha256": "e4b7c864c727eaac219a46ceb8f571ec46d66d6e2af41decc6f2722d1d0aff9a"
     },
     {
       "path": "manifest.json",
-      "sha256": "cae68fa169a394157b2859d74498265855ee289e02ad3884159586aa54418a18"
+      "sha256": "ffda9d47b1015a76e5a8177f300e78481fc4f5d131fe0f177b7313fcb02a15dc"
     },
     {
       "path": "package.json",
-      "sha256": "02d2177c4d78bab711ad18016c989a5e6bc799d219707a339d7f24cc798c9fe6"
+      "sha256": "7254c0e9d37331fcd7cd8b5e53f55672cff2fd12860b1336d0ccdbd050f31837"
     },
     {
       "path": "pnpm-lock.yaml",
-      "sha256": "6b0d4e55305f1271ae9feeb7cb340aff7702571ecc058887a7436eaaf9db5faa"
+      "sha256": "23163bf084a8a5425396a58272f783074c6034992123314aa233a657123db26e"
     },
     {
       "path": "README.md",
@@ -34,15 +34,15 @@
     },
     {
       "path": "scripts/build.mjs",
-      "sha256": "b2131de545437bf1c658c44e059cbc76e2dc42690d9794adf569667b3f83817a"
+      "sha256": "2a2c0aff3fdfee1e81ab981696647671f88b7751988e61b0b622c04f10acbea7"
     },
     {
       "path": "scripts/plugin-sign.ts",
-      "sha256": "6646535c3a65cbcdc0f22e9176025e0f1eed4f48143ef4950e085dae06cad2c1"
+      "sha256": "dc21f6daa2c0d454b53cc719524f41669c1f1a0319b80b50dc1f0b3fa3f796e3"
     },
     {
       "path": "scripts/plugin-verify.ts",
-      "sha256": "7f1f2407a2a8fac287d88e18f48db22d926c7de656c06143dd7baf3f30898620"
+      "sha256": "555f897860b881817f6aa66a933a38fb31388b461b8fa1e9e9b6126b67bc18e0"
     },
     {
       "path": "scripts/render-screenshot.sh",
@@ -58,27 +58,27 @@
     },
     {
       "path": "src/renderer/historyCapture.ts",
-      "sha256": "400fd6b975e28fe3d9a41934d902f31bef392825e7dc74f0901de3e5a88889aa"
+      "sha256": "b0e471594998a8e3a6b1c7e181488705b3a94c9149cec27babef7d729ea30046"
     },
     {
       "path": "src/renderer/HistoryEntryRow.tsx",
-      "sha256": "02a42182320219b9e9b43abcd710ff59796d93ac89ba9000c4627691fdc488d2"
+      "sha256": "ea327aa83e6dfa79a82dd0d607bcac6677f5f741488bb7840ee317227a40cc3b"
     },
     {
       "path": "src/renderer/HistoryPanel.tsx",
-      "sha256": "e41aedb9420b063acfda4b53e2201c6ed7f35cd6c8c6df34d52df9747491a66f"
+      "sha256": "a45ac839b6842420a7ab69ac5a10b2629d6a9007041d95ce31167ecb313e82eb"
     },
     {
       "path": "src/renderer/historyStorage.ts",
-      "sha256": "10c412041ecd7acc5d65de60f73764aeb40f9c6ce40968fc8cd1c40fc7b9ecf5"
+      "sha256": "4d7f76dc74cad6f89b33a88623c6f6a7e81418663bf31003e567144b105841c1"
     },
     {
       "path": "src/renderer/historyStore.ts",
-      "sha256": "5b3c6eb2326eaa9cfb77c185510e828037a0438b30d2e5b22736a297d25a9b42"
+      "sha256": "3c2d231f7349c87cc42cc5f5e62153490ec6ce6d20db14409471d8673a48a950"
     },
     {
       "path": "src/renderer/index.tsx",
-      "sha256": "e646b301f2c4e58a8a010254cde304ef34a32afcb820523a71654711be956c42"
+      "sha256": "bf56f07305df81e75bccbafb99d1b89d248702e98d06e64e274af81bdb53f225"
     },
     {
       "path": "src/shared/constants.ts",
@@ -90,16 +90,16 @@
     },
     {
       "path": "src/shared/historyEntry.ts",
-      "sha256": "59943011999e50d918d3cdc5ac455e2db73d9fc8e32fa7e52ec93ee2bf0d93ff"
+      "sha256": "7df3909c145326b3cc81ee92dd23418443b070e7719930d207bf567004f2c22e"
     },
     {
       "path": "tsconfig.json",
-      "sha256": "d96f30992a17200155752831b8b7118f775e408a26896d06e2d0d648de4ba5c8"
+      "sha256": "dced0ea880bec6222ac9856d3d2ce11b91fd874298f3129c8b5944606dc73668"
     },
     {
       "path": "vitest.config.ts",
       "sha256": "aa7858f05b2261348f1502fa076550b0930672e0df3f054a22e8a8d9b68fb32e"
     }
   ],
-  "signature": "B7PTyl6Lcil1AMyrLQDbQlXkZjGjlS2IQnzxx6ieF1OoabV/MhuXHtkwxXkarKy+l0NQUyTaryB/om4c/n0GBg=="
+  "signature": "4neLBH4nwDAhc64WyUjW3sDR698uU5Y/dIzYR0Qb92OgAywfA7RI5KUelMarqPlDCtN0lv4/HbUZPOxsNBIYDw=="
 }

@@ -1,4 +1,4 @@
-import { createExternalStore } from "@harborclient/plugin-api/store";
+import { createExternalStore } from "@harborclient/sdk/store";
 import type { HistoryEntry } from "../shared/historyEntry.js";
 
 /**

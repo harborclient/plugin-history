@@ -2,7 +2,7 @@ import {
   formatHeaders,
   methodColorClass,
   statusColorClass,
-} from "@harborclient/plugin-api/ui";
+} from "@harborclient/sdk/ui";
 import type { HistoryEntry } from "../shared/historyEntry.js";
 
 interface Props {

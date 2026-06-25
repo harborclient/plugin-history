@@ -1,7 +1,7 @@
 import type {
   PluginHttpRequest,
   PluginHttpResponse,
-} from "@harborclient/plugin-api";
+} from "@harborclient/sdk";
 import {
   createEntryId,
   truncateBody,

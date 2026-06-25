@@ -10,7 +10,7 @@ const rendererOptions = {
   outfile: "dist/renderer.js",
   platform: "browser",
   jsx: "automatic",
-  jsxImportSource: "@harborclient/plugin-api",
+  jsxImportSource: "@harborclient/sdk",
   external: ["react", "react-dom"],
 };
 

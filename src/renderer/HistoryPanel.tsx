@@ -2,8 +2,8 @@ import {
   useCallback,
   useState,
   useSyncExternalStore,
-} from "@harborclient/plugin-api/react";
-import type { PluginContext } from "@harborclient/plugin-api";
+} from "@harborclient/sdk/react";
+import type { PluginContext } from "@harborclient/sdk";
 import { HistoryEntryRow } from "./HistoryEntryRow.js";
 import { clearHistoryEntries, saveHistoryEntries } from "./historyStorage.js";
 import { historyStore } from "./historyStore.js";

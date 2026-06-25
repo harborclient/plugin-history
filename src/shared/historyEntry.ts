@@ -1,8 +1,8 @@
 import {
   randomId,
   truncateBody as truncateBodyBytes,
-} from "@harborclient/plugin-api/runtime-utils";
-import { mergeById } from "@harborclient/plugin-api/storage";
+} from "@harborclient/sdk/runtime-utils";
+import { mergeById } from "@harborclient/sdk/storage";
 
 /**
  * Maximum bytes stored per request or response body before truncation.
