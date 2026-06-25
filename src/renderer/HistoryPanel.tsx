@@ -103,18 +103,20 @@ export function HistoryPanel({ storage, hooks }: Props) {
 
   return (
     <div className="flex h-full min-h-0 flex-col bg-control">
-      <div className="flex shrink-0 items-center justify-between gap-2 border-b border-separator px-3 py-2">
-        <div className="flex min-w-0 items-center gap-2">
-          <h3 className="text-[14px] font-medium text-text">History</h3>
-          <span className="text-[14px] text-muted">({entries.length})</span>
-        </div>
-        <div className="flex shrink-0 items-center gap-2">
+      <div className="flex shrink-0 items-center border-b border-separator px-3 py-2">
+        <div className="flex min-w-0 flex-wrap items-center gap-2 text-[14px] font-medium text-text">
+          <span>History</span>
+          <span className="text-[14px] font-normal text-muted">
+            ({entries.length})
+          </span>
           {confirmClear ? (
             <>
-              <span className="text-[14px] text-muted">Clear all history?</span>
+              <span className="text-[14px] font-normal text-muted">
+                Clear all history?
+              </span>
               <button
                 type="button"
-                className="rounded border border-separator px-2 py-0.5 text-[14px] text-text hover:bg-selection/60"
+                className="cursor-pointer rounded-md border border-separator bg-control px-3 py-1 text-[14px] font-normal text-text shadow-sm hover:bg-selection disabled:cursor-not-allowed disabled:opacity-50"
                 disabled={busy}
                 onClick={() => void handleClear()}
               >
@@ -122,7 +124,7 @@ export function HistoryPanel({ storage, hooks }: Props) {
               </button>
               <button
                 type="button"
-                className="rounded border border-separator px-2 py-0.5 text-[14px] text-muted hover:bg-selection/60"
+                className="cursor-pointer rounded-md border border-separator bg-control px-3 py-1 text-[14px] font-normal text-muted shadow-sm hover:bg-selection disabled:cursor-not-allowed disabled:opacity-50"
                 disabled={busy}
                 onClick={() => setConfirmClear(false)}
               >
@@ -132,7 +134,7 @@ export function HistoryPanel({ storage, hooks }: Props) {
           ) : (
             <button
               type="button"
-              className="rounded border border-separator px-2 py-0.5 text-[14px] text-muted hover:bg-selection/60 disabled:opacity-50"
+              className="cursor-pointer rounded-md border border-separator bg-control px-3 py-1 text-[14px] font-normal text-text shadow-sm hover:bg-selection disabled:cursor-not-allowed disabled:opacity-50"
               disabled={entries.length === 0 || busy}
               onClick={() => setConfirmClear(true)}
             >
