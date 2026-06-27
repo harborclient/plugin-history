@@ -1,12 +1,9 @@
-import {
-  useCallback,
-  useState,
-  useSyncExternalStore,
-} from "@harborclient/sdk/react";
-import type { PluginContext } from "@harborclient/sdk";
-import { HistoryEntryRow } from "./HistoryEntryRow.js";
-import { clearHistoryEntries, saveHistoryEntries } from "./historyStorage.js";
-import { historyStore } from "./historyStore.js";
+import { Button, EmptyState } from '@harborclient/sdk/components';
+import type { PluginContext } from '@harborclient/sdk';
+import { useCallback, useState, useSyncExternalStore } from '@harborclient/sdk/react';
+import { HistoryEntryRow } from './HistoryEntryRow.js';
+import { clearHistoryEntries } from './historyStorage.js';
+import { historyStore } from './historyStore.js';
 
 interface Props {
   /**
@@ -21,11 +18,7 @@ interface Props {
 export function HistoryPanel({ hc }: Props) {
   const { storage } = hc;
 
-  const entries = useSyncExternalStore(
-    historyStore.subscribe,
-    historyStore.getSnapshot,
-    () => []
-  );
+  const entries = useSyncExternalStore(historyStore.subscribe, historyStore.getSnapshot, () => []);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [confirmClear, setConfirmClear] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -57,48 +50,33 @@ export function HistoryPanel({ hc }: Props) {
       <div className="flex shrink-0 items-center border-b border-separator px-3 py-2">
         <div className="flex min-w-0 flex-wrap items-center gap-2 text-[14px] font-medium text-text">
           <span>History</span>
-          <span className="text-[14px] font-normal text-muted">
-            ({entries.length})
-          </span>
+          <span className="text-[14px] font-normal text-muted">({entries.length})</span>
           {confirmClear ? (
             <>
-              <span className="text-[14px] font-normal text-muted">
-                Clear all history?
-              </span>
-              <button
-                type="button"
-                className="cursor-pointer rounded-md border border-separator bg-control px-3 py-1 text-[14px] font-normal text-text shadow-sm hover:bg-selection disabled:cursor-not-allowed disabled:opacity-50"
-                disabled={busy}
-                onClick={() => void handleClear()}
-              >
+              <span className="text-[14px] font-normal text-muted">Clear all history?</span>
+              <Button variant="secondaryDanger" disabled={busy} onClick={() => void handleClear()}>
                 Confirm
-              </button>
-              <button
-                type="button"
-                className="cursor-pointer rounded-md border border-separator bg-control px-3 py-1 text-[14px] font-normal text-muted shadow-sm hover:bg-selection disabled:cursor-not-allowed disabled:opacity-50"
-                disabled={busy}
-                onClick={() => setConfirmClear(false)}
-              >
+              </Button>
+              <Button variant="secondary" disabled={busy} onClick={() => setConfirmClear(false)}>
                 Cancel
-              </button>
+              </Button>
             </>
           ) : (
-            <button
-              type="button"
-              className="cursor-pointer rounded-md border border-separator bg-control px-3 py-1 text-[14px] font-normal text-text shadow-sm hover:bg-selection disabled:cursor-not-allowed disabled:opacity-50"
+            <Button
+              variant="secondary"
               disabled={entries.length === 0 || busy}
               onClick={() => setConfirmClear(true)}
             >
               Clear
-            </button>
+            </Button>
           )}
         </div>
       </div>
       <div className="min-h-0 flex-1 overflow-auto" role="list">
         {entries.length === 0 ? (
-          <p className="px-3 py-4 text-[14px] text-muted" role="status">
+          <EmptyState variant="inline" className="px-3 py-4">
             No requests recorded yet. Send a request to populate history.
-          </p>
+          </EmptyState>
         ) : (
           entries.map((entry) => (
             <HistoryEntryRow

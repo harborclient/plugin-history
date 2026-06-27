@@ -1,12 +1,5 @@
-import type {
-  PluginHttpRequest,
-  PluginHttpResponse,
-} from "@harborclient/sdk";
-import {
-  createEntryId,
-  truncateBody,
-  type HistoryEntry,
-} from "../shared/historyEntry.js";
+import type { PluginHttpRequest, PluginHttpResponse } from '@harborclient/sdk';
+import { createEntryId, truncateBody, type HistoryEntry } from '../shared/historyEntry.js';
 
 /**
  * Maps an HTTP hook exchange into a storable history entry.
@@ -19,8 +12,8 @@ export function toHistoryEntry(
   request: PluginHttpRequest,
   response: PluginHttpResponse
 ): HistoryEntry {
-  const requestBody = truncateBody(request.body ?? "");
-  const responseBody = truncateBody(response.body ?? "");
+  const requestBody = truncateBody(request.body ?? '');
+  const responseBody = truncateBody(response.body ?? '');
 
   return {
     id: createEntryId(),
@@ -33,6 +26,6 @@ export function toHistoryEntry(
     statusText: response.statusText,
     responseHeaders: { ...response.headers },
     responseBody: responseBody.body,
-    truncated: requestBody.truncated || responseBody.truncated,
+    truncated: requestBody.truncated || responseBody.truncated
   };
 }

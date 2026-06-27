@@ -1,568 +1,589 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-<head>
-  <meta charset="UTF-8" />
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+      html,
+      body {
+        width: 1280px;
+        height: 720px;
+        min-height: 720px;
+        max-height: 720px;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        background-color: #0c1220;
+        background-image:
+          radial-gradient(ellipse 70% 60% at 80% 10%, rgba(251, 191, 36, 0.18) 0%, transparent 55%),
+          radial-gradient(
+            ellipse 60% 50% at 15% 85%,
+            rgba(129, 140, 248, 0.16) 0%,
+            transparent 50%
+          ),
+          radial-gradient(ellipse 40% 30% at 50% 50%, rgba(56, 189, 248, 0.06) 0%, transparent 60%),
+          linear-gradient(160deg, #0c1220 0%, #111827 45%, #0a0f1a 100%);
+        background-repeat: no-repeat;
+        background-size: 1280px 720px;
+      }
 
-    html,
-    body {
-      width: 1280px;
-      height: 720px;
-      min-height: 720px;
-      max-height: 720px;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #0c1220;
-      background-image:
-        radial-gradient(ellipse 70% 60% at 80% 10%, rgba(251, 191, 36, 0.18) 0%, transparent 55%),
-        radial-gradient(ellipse 60% 50% at 15% 85%, rgba(129, 140, 248, 0.16) 0%, transparent 50%),
-        radial-gradient(ellipse 40% 30% at 50% 50%, rgba(56, 189, 248, 0.06) 0%, transparent 60%),
-        linear-gradient(160deg, #0c1220 0%, #111827 45%, #0a0f1a 100%);
-      background-repeat: no-repeat;
-      background-size: 1280px 720px;
-    }
+      .canvas {
+        position: fixed;
+        inset: 0;
+        width: 1280px;
+        height: 720px;
+        background: transparent;
+      }
 
-    .canvas {
-      position: fixed;
-      inset: 0;
-      width: 1280px;
-      height: 720px;
-      background: transparent;
-    }
+      .header {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 2;
+        padding: 32px 48px 20px;
+      }
 
-    .header {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 2;
-      padding: 32px 48px 20px;
-    }
+      .grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: 32px 32px;
+        pointer-events: none;
+      }
 
-    .grid {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-      background-size: 32px 32px;
-      pointer-events: none;
-    }
+      .mockup-area {
+        position: absolute;
+        top: 172px;
+        left: 0;
+        width: 1280px;
+        height: 548px;
+      }
 
-    .mockup-area {
-      position: absolute;
-      top: 172px;
-      left: 0;
-      width: 1280px;
-      height: 548px;
-    }
+      .badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+      }
 
-    .badge-row {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
+      .plugin-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 5px 12px;
+        border-radius: 999px;
+        background: rgba(251, 191, 36, 0.12);
+        border: 1px solid rgba(251, 191, 36, 0.35);
+        color: #fcd34d;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
 
-    .plugin-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 5px 12px;
-      border-radius: 999px;
-      background: rgba(251, 191, 36, 0.12);
-      border: 1px solid rgba(251, 191, 36, 0.35);
-      color: #fcd34d;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
+      .plugin-badge .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #fbbf24;
+        box-shadow: 0 0 8px #fbbf24;
+      }
 
-    .plugin-badge .dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #fbbf24;
-      box-shadow: 0 0 8px #fbbf24;
-    }
+      .pill {
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: #94a3b8;
+        font-size: 11px;
+        font-weight: 500;
+      }
 
-    .pill {
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      color: #94a3b8;
-      font-size: 11px;
-      font-weight: 500;
-    }
+      h1 {
+        font-size: 38px;
+        font-weight: 700;
+        line-height: 1.1;
+        color: #f8fafc;
+        letter-spacing: -0.02em;
+      }
 
-    h1 {
-      font-size: 38px;
-      font-weight: 700;
-      line-height: 1.1;
-      color: #f8fafc;
-      letter-spacing: -0.02em;
-    }
+      h1 span {
+        background: linear-gradient(90deg, #fbbf24, #f97316, #818cf8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
 
-    h1 span {
-      background: linear-gradient(90deg, #fbbf24, #f97316, #818cf8);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
+      .subtitle {
+        margin-top: 10px;
+        font-size: 16px;
+        color: #64748b;
+        line-height: 1.45;
+        max-width: 560px;
+      }
 
-    .subtitle {
-      margin-top: 10px;
-      font-size: 16px;
-      color: #64748b;
-      line-height: 1.45;
-      max-width: 560px;
-    }
+      .mockup-glow {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 4px;
+        bottom: 0;
+        border-radius: 16px 16px 0 0;
+        background: linear-gradient(
+          135deg,
+          rgba(251, 191, 36, 0.2),
+          rgba(129, 140, 248, 0.12),
+          rgba(56, 189, 248, 0.08)
+        );
+        filter: blur(24px);
+        opacity: 0.85;
+      }
 
-    .mockup-glow {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 4px;
-      bottom: 0;
-      border-radius: 16px 16px 0 0;
-      background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(129, 140, 248, 0.12), rgba(56, 189, 248, 0.08));
-      filter: blur(24px);
-      opacity: 0.85;
-    }
+      .mockup {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1280px;
+        height: 548px;
+        border-radius: 12px 12px 0 0;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: none;
+        background: #1a1f2e;
+        box-shadow:
+          0 -8px 32px rgba(0, 0, 0, 0.35),
+          0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
 
-    .mockup {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 1280px;
-      height: 548px;
-      border-radius: 12px 12px 0 0;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-bottom: none;
-      background: #1a1f2e;
-      box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
+      .mockup-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        background: #141824;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        flex-shrink: 0;
+      }
 
-    .mockup-toolbar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 16px;
-      background: #141824;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      flex-shrink: 0;
-    }
+      .traffic {
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+      }
 
-    .traffic {
-      width: 11px;
-      height: 11px;
-      border-radius: 50%;
-    }
+      .traffic.r {
+        background: #ff5f57;
+      }
 
-    .traffic.r {
-      background: #ff5f57;
-    }
+      .traffic.y {
+        background: #febc2e;
+      }
 
-    .traffic.y {
-      background: #febc2e;
-    }
+      .traffic.g {
+        background: #28c840;
+      }
 
-    .traffic.g {
-      background: #28c840;
-    }
+      .toolbar-title {
+        margin-left: 10px;
+        font-size: 12px;
+        color: #64748b;
+        font-weight: 500;
+      }
 
-    .toolbar-title {
-      margin-left: 10px;
-      font-size: 12px;
-      color: #64748b;
-      font-weight: 500;
-    }
+      .request-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 16px;
+        background: #161b28;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        flex-shrink: 0;
+      }
 
-    .request-bar {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 16px;
-      background: #161b28;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      flex-shrink: 0;
-    }
+      .method-get {
+        padding: 4px 10px;
+        border-radius: 5px;
+        background: rgba(52, 211, 153, 0.15);
+        color: #34d399;
+        font-size: 12px;
+        font-weight: 700;
+        font-family: ui-monospace, monospace;
+      }
 
-    .method-get {
-      padding: 4px 10px;
-      border-radius: 5px;
-      background: rgba(52, 211, 153, 0.15);
-      color: #34d399;
-      font-size: 12px;
-      font-weight: 700;
-      font-family: ui-monospace, monospace;
-    }
+      .url-bar {
+        flex: 1;
+        font-size: 12px;
+        color: #94a3b8;
+        font-family: ui-monospace, monospace;
+      }
 
-    .url-bar {
-      flex: 1;
-      font-size: 12px;
-      color: #94a3b8;
-      font-family: ui-monospace, monospace;
-    }
+      .editor-filler {
+        flex: 0 0 72px;
+        min-height: 0;
+        background: linear-gradient(180deg, #141824 0%, #161b28 100%);
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
 
-    .editor-filler {
-      flex: 0 0 72px;
-      min-height: 0;
-      background: linear-gradient(180deg, #141824 0%, #161b28 100%);
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
+      .filler-line {
+        height: 10px;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.04);
+      }
 
-    .filler-line {
-      height: 10px;
-      border-radius: 4px;
-      background: rgba(255, 255, 255, 0.04);
-    }
+      .filler-line.w60 {
+        width: 60%;
+      }
 
-    .filler-line.w60 {
-      width: 60%;
-    }
+      .filler-line.w40 {
+        width: 40%;
+      }
 
-    .filler-line.w40 {
-      width: 40%;
-    }
+      .filler-line.w80 {
+        width: 80%;
+      }
 
-    .filler-line.w80 {
-      width: 80%;
-    }
+      .footer-panel {
+        flex: 1;
+        min-height: 0;
+        background: #1a1f2e;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.35);
+        display: flex;
+        flex-direction: column;
+      }
 
-    .footer-panel {
-      flex: 1;
-      min-height: 0;
-      background: #1a1f2e;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.35);
-      display: flex;
-      flex-direction: column;
-    }
+      .footer-tabs {
+        display: flex;
+        gap: 2px;
+        padding: 6px 12px 0;
+        background: #141824;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        flex-shrink: 0;
+      }
 
-    .footer-tabs {
-      display: flex;
-      gap: 2px;
-      padding: 6px 12px 0;
-      background: #141824;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      flex-shrink: 0;
-    }
+      .ftab {
+        padding: 7px 14px;
+        font-size: 11px;
+        color: #64748b;
+        border-radius: 6px 6px 0 0;
+      }
 
-    .ftab {
-      padding: 7px 14px;
-      font-size: 11px;
-      color: #64748b;
-      border-radius: 6px 6px 0 0;
-    }
+      .ftab.active {
+        color: #e2e8f0;
+        background: #1a1f2e;
+        font-weight: 600;
+      }
 
-    .ftab.active {
-      color: #e2e8f0;
-      background: #1a1f2e;
-      font-weight: 600;
-    }
+      .panel-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        font-size: 13px;
+        font-weight: 600;
+        color: #e2e8f0;
+        flex-shrink: 0;
+      }
 
-    .panel-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 16px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      font-size: 13px;
-      font-weight: 600;
-      color: #e2e8f0;
-      flex-shrink: 0;
-    }
+      .panel-header .count {
+        font-weight: 400;
+        color: #64748b;
+      }
 
-    .panel-header .count {
-      font-weight: 400;
-      color: #64748b;
-    }
+      .panel-header .spacer {
+        flex: 1;
+      }
 
-    .panel-header .spacer {
-      flex: 1;
-    }
+      .clear-btn {
+        padding: 4px 12px;
+        border-radius: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.04);
+        color: #94a3b8;
+        font-size: 11px;
+        font-weight: 400;
+      }
 
-    .clear-btn {
-      padding: 4px 12px;
-      border-radius: 6px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(255, 255, 255, 0.04);
-      color: #94a3b8;
-      font-size: 11px;
-      font-weight: 400;
-    }
+      .history-list {
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
+      }
 
-    .history-list {
-      flex: 1;
-      min-height: 0;
-      overflow: hidden;
-    }
+      .history-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        font-size: 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      }
 
-    .history-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 16px;
-      font-size: 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-    }
+      .history-row.dim {
+        opacity: 0.55;
+      }
 
-    .history-row.dim {
-      opacity: 0.55;
-    }
+      .history-row.active {
+        background: rgba(56, 189, 248, 0.06);
+      }
 
-    .history-row.active {
-      background: rgba(56, 189, 248, 0.06);
-    }
+      .status-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #34d399;
+        flex-shrink: 0;
+      }
 
-    .status-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #34d399;
-      flex-shrink: 0;
-    }
+      .method {
+        font-weight: 700;
+        font-family: ui-monospace, monospace;
+        flex-shrink: 0;
+      }
 
-    .method {
-      font-weight: 700;
-      font-family: ui-monospace, monospace;
-      flex-shrink: 0;
-    }
+      .method.post {
+        color: #38bdf8;
+      }
 
-    .method.post {
-      color: #38bdf8;
-    }
+      .method.get {
+        color: #34d399;
+      }
 
-    .method.get {
-      color: #34d399;
-    }
+      .row-url {
+        flex: 1;
+        font-family: ui-monospace, monospace;
+        color: #cbd5e1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
 
-    .row-url {
-      flex: 1;
-      font-family: ui-monospace, monospace;
-      color: #cbd5e1;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+      .row-status,
+      .row-time {
+        color: #64748b;
+        flex-shrink: 0;
+      }
 
-    .row-status,
-    .row-time {
-      color: #64748b;
-      flex-shrink: 0;
-    }
+      .expanded {
+        padding: 12px 16px 14px;
+        background: rgba(0, 0, 0, 0.15);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
 
-    .expanded {
-      padding: 12px 16px 14px;
-      background: rgba(0, 0, 0, 0.15);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    }
+      .exp-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
 
-    .exp-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
+      .exp-section h5 {
+        font-size: 10px;
+        font-weight: 600;
+        color: #94a3b8;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
 
-    .exp-section h5 {
-      font-size: 10px;
-      font-weight: 600;
-      color: #94a3b8;
-      margin-bottom: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
+      .exp-pre {
+        padding: 10px 12px;
+        border-radius: 7px;
+        background: #0f131c;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        font-family: ui-monospace, monospace;
+        font-size: 11px;
+        line-height: 1.55;
+        color: #94a3b8;
+      }
 
-    .exp-pre {
-      padding: 10px 12px;
-      border-radius: 7px;
-      background: #0f131c;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      font-family: ui-monospace, monospace;
-      font-size: 11px;
-      line-height: 1.55;
-      color: #94a3b8;
-    }
+      .exp-pre .key {
+        color: #38bdf8;
+      }
 
-    .exp-pre .key {
-      color: #38bdf8;
-    }
+      .exp-pre .val {
+        color: #34d399;
+      }
 
-    .exp-pre .val {
-      color: #34d399;
-    }
+      .toast {
+        position: absolute;
+        top: 36px;
+        right: 56px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        border-radius: 9px;
+        background: rgba(15, 23, 42, 0.95);
+        border: 1px solid rgba(251, 191, 36, 0.35);
+        box-shadow:
+          0 8px 24px rgba(0, 0, 0, 0.45),
+          0 0 20px rgba(251, 191, 36, 0.12);
+        z-index: 4;
+      }
 
-    .toast {
-      position: absolute;
-      top: 36px;
-      right: 56px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 14px;
-      border-radius: 9px;
-      background: rgba(15, 23, 42, 0.95);
-      border: 1px solid rgba(251, 191, 36, 0.35);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 20px rgba(251, 191, 36, 0.12);
-      z-index: 4;
-    }
+      .toast-icon {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: rgba(251, 191, 36, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fbbf24;
+        font-size: 11px;
+        font-weight: 700;
+      }
 
-    .toast-icon {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: rgba(251, 191, 36, 0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fbbf24;
-      font-size: 11px;
-      font-weight: 700;
-    }
+      .toast-text {
+        font-size: 12px;
+        color: #e2e8f0;
+        font-weight: 500;
+      }
+    </style>
+  </head>
 
-    .toast-text {
-      font-size: 12px;
-      color: #e2e8f0;
-      font-weight: 500;
-    }
-  </style>
-</head>
+  <body>
+    <div class="canvas">
+      <div class="grid"></div>
 
-<body>
-  <div class="canvas">
-    <div class="grid"></div>
-
-    <div class="header">
-      <div class="badge-row">
-        <div class="plugin-badge"><span class="dot"></span> HarborClient Plugin</div>
-        <span class="pill">Auto capture</span>
-        <span class="pill">Persistent</span>
-        <span class="pill">Expandable details</span>
+      <div class="header">
+        <div class="badge-row">
+          <div class="plugin-badge"><span class="dot"></span> HarborClient Plugin</div>
+          <span class="pill">Auto capture</span>
+          <span class="pill">Persistent</span>
+          <span class="pill">Expandable details</span>
+        </div>
+        <h1>Every request, <span>remembered</span></h1>
+        <p class="subtitle">
+          Automatic history for every successful send. Expand any entry to inspect headers and
+          bodies — even after restart.
+        </p>
       </div>
-      <h1>Every request, <span>remembered</span></h1>
-      <p class="subtitle">Automatic history for every successful send. Expand any entry to inspect headers and bodies —
-        even after restart.</p>
-    </div>
 
-    <div class="mockup-area">
-      <div class="mockup-glow"></div>
-      <div class="mockup">
-        <div class="mockup-toolbar">
-          <span class="traffic r"></span>
-          <span class="traffic y"></span>
-          <span class="traffic g"></span>
-          <span class="toolbar-title">HarborClient — Get Users</span>
-        </div>
-        <div class="request-bar">
-          <span class="method-get">GET</span>
-          <span class="url-bar">https://api.example.com/v1/users</span>
-        </div>
-        <div class="editor-filler">
-          <div class="filler-line w80"></div>
-          <div class="filler-line w60"></div>
-          <div class="filler-line w40"></div>
-        </div>
-        <div class="footer-panel">
-          <div class="footer-tabs">
-            <div class="ftab">Console</div>
-            <div class="ftab">Variables</div>
-            <div class="ftab active">History (4)</div>
+      <div class="mockup-area">
+        <div class="mockup-glow"></div>
+        <div class="mockup">
+          <div class="mockup-toolbar">
+            <span class="traffic r"></span>
+            <span class="traffic y"></span>
+            <span class="traffic g"></span>
+            <span class="toolbar-title">HarborClient — Get Users</span>
           </div>
-          <div class="panel-header">
-            <span>History</span>
-            <span class="count">(4)</span>
-            <span class="spacer"></span>
-            <span class="clear-btn">Clear</span>
+          <div class="request-bar">
+            <span class="method-get">GET</span>
+            <span class="url-bar">https://api.example.com/v1/users</span>
           </div>
-          <div class="history-list">
-            <div class="history-row dim">
-              <span class="status-dot"></span>
-              <span class="method get">GET</span>
-              <span class="row-url">https://api.example.com/v1/users</span>
-              <span class="row-status">200 OK</span>
-              <span class="row-time">2:14 PM</span>
+          <div class="editor-filler">
+            <div class="filler-line w80"></div>
+            <div class="filler-line w60"></div>
+            <div class="filler-line w40"></div>
+          </div>
+          <div class="footer-panel">
+            <div class="footer-tabs">
+              <div class="ftab">Console</div>
+              <div class="ftab">Variables</div>
+              <div class="ftab active">History (4)</div>
             </div>
-            <div class="history-row active">
-              <span class="status-dot"></span>
-              <span class="method post">POST</span>
-              <span class="row-url">https://api.example.com/v1/oauth/token</span>
-              <span class="row-status">200 OK</span>
-              <span class="row-time">2:15 PM</span>
+            <div class="panel-header">
+              <span>History</span>
+              <span class="count">(4)</span>
+              <span class="spacer"></span>
+              <span class="clear-btn">Clear</span>
             </div>
-            <div class="expanded">
-              <div class="exp-grid">
-                <div class="exp-section">
-                  <h5>Request headers</h5>
-                  <div class="exp-pre"><span class="key">Content-Type</span>: <span class="val">application/json</span>
-                    <span class="key">Authorization</span>: <span class="val">Bearer ••••••••</span>
+            <div class="history-list">
+              <div class="history-row dim">
+                <span class="status-dot"></span>
+                <span class="method get">GET</span>
+                <span class="row-url">https://api.example.com/v1/users</span>
+                <span class="row-status">200 OK</span>
+                <span class="row-time">2:14 PM</span>
+              </div>
+              <div class="history-row active">
+                <span class="status-dot"></span>
+                <span class="method post">POST</span>
+                <span class="row-url">https://api.example.com/v1/oauth/token</span>
+                <span class="row-status">200 OK</span>
+                <span class="row-time">2:15 PM</span>
+              </div>
+              <div class="expanded">
+                <div class="exp-grid">
+                  <div class="exp-section">
+                    <h5>Request headers</h5>
+                    <div class="exp-pre">
+                      <span class="key">Content-Type</span>:
+                      <span class="val">application/json</span>
+                      <span class="key">Authorization</span>:
+                      <span class="val">Bearer ••••••••</span>
+                    </div>
                   </div>
-                </div>
-                <div class="exp-section">
-                  <h5>Response headers</h5>
-                  <div class="exp-pre"><span class="key">Content-Type</span>: <span class="val">application/json</span>
-                    <span class="key">Cache-Control</span>: <span class="val">no-store</span>
+                  <div class="exp-section">
+                    <h5>Response headers</h5>
+                    <div class="exp-pre">
+                      <span class="key">Content-Type</span>:
+                      <span class="val">application/json</span>
+                      <span class="key">Cache-Control</span>: <span class="val">no-store</span>
+                    </div>
                   </div>
-                </div>
-                <div class="exp-section">
-                  <h5>Request body</h5>
-                  <div class="exp-pre">{
-                    <span class="key">"grant_type"</span>: <span class="val">"client_credentials"</span>,
-                    <span class="key">"scope"</span>: <span class="val">"read write"</span>
-                    }
+                  <div class="exp-section">
+                    <h5>Request body</h5>
+                    <div class="exp-pre">
+                      { <span class="key">"grant_type"</span>:
+                      <span class="val">"client_credentials"</span>,
+                      <span class="key">"scope"</span>: <span class="val">"read write"</span>
+                      }
+                    </div>
                   </div>
-                </div>
-                <div class="exp-section">
-                  <h5>Response body</h5>
-                  <div class="exp-pre">{
-                    <span class="key">"access_token"</span>: <span class="val">"eyJhbGciOiJIUzI1…"</span>,
-                    <span class="key">"expires_in"</span>: <span class="val">3600</span>
-                    }
+                  <div class="exp-section">
+                    <h5>Response body</h5>
+                    <div class="exp-pre">
+                      { <span class="key">"access_token"</span>:
+                      <span class="val">"eyJhbGciOiJIUzI1…"</span>,
+                      <span class="key">"expires_in"</span>: <span class="val">3600</span>
+                      }
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="history-row dim">
-              <span class="status-dot"></span>
-              <span class="method get">GET</span>
-              <span class="row-url">https://api.example.com/v1/me</span>
-              <span class="row-status">200 OK</span>
-              <span class="row-time">2:16 PM</span>
-            </div>
-            <div class="history-row dim">
-              <span class="status-dot"></span>
-              <span class="method get">GET</span>
-              <span class="row-url">https://api.example.com/v1/organizations</span>
-              <span class="row-status">200 OK</span>
-              <span class="row-time">2:17 PM</span>
+              <div class="history-row dim">
+                <span class="status-dot"></span>
+                <span class="method get">GET</span>
+                <span class="row-url">https://api.example.com/v1/me</span>
+                <span class="row-status">200 OK</span>
+                <span class="row-time">2:16 PM</span>
+              </div>
+              <div class="history-row dim">
+                <span class="status-dot"></span>
+                <span class="method get">GET</span>
+                <span class="row-url">https://api.example.com/v1/organizations</span>
+                <span class="row-status">200 OK</span>
+                <span class="row-time">2:17 PM</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="toast">
-      <div class="toast-icon">✓</div>
-      <span class="toast-text">Request captured</span>
+      <div class="toast">
+        <div class="toast-icon">✓</div>
+        <span class="toast-text">Request captured</span>
+      </div>
     </div>
-  </div>
-</body>
-
+  </body>
 </html>

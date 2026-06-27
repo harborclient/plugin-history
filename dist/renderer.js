@@ -1,4 +1,4 @@
-// node_modules/.pnpm/@harborclient+sdk@0.4.3_react@19.2.7/node_modules/@harborclient/sdk/dist/runtime/reactHost.js
+// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/runtime/reactHost.js
 var hostReact = null;
 function setHostReact(react) {
   hostReact = react;
@@ -12,12 +12,12 @@ function requireHostReact() {
   return hostReact;
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.4.3_react@19.2.7/node_modules/@harborclient/sdk/dist/runtime/index.js
+// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/runtime/index.js
 function installReact(react) {
   setHostReact(react);
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.4.3_react@19.2.7/node_modules/@harborclient/sdk/dist/runtime-utils.js
+// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/runtime-utils.js
 function randomId(prefix = "id") {
   if (typeof globalThis.crypto?.randomUUID === "function") {
     return globalThis.crypto.randomUUID();
@@ -88,7 +88,7 @@ function truncateBody(body, maxBytes, suffix = `
   };
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.4.3_react@19.2.7/node_modules/@harborclient/sdk/dist/storage/cappedList.js
+// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/storage/cappedList.js
 function mergeById(pending, existing, options) {
   if (pending.length === 0) {
     return existing.slice(0, options.cap);
@@ -149,7 +149,36 @@ function toHistoryEntry(request, response) {
   };
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.4.3_react@19.2.7/node_modules/@harborclient/sdk/dist/runtime/react.js
+// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/runtime/jsx-runtime.js
+var Fragment = Symbol.for("@harborclient/sdk.Fragment");
+function build(type, props, key) {
+  const react = requireHostReact();
+  const elementType = type === Fragment ? react.Fragment : type;
+  const { children, ...rest } = props ?? {};
+  if (key !== void 0) {
+    rest.key = key;
+  }
+  return react.createElement(elementType, rest, children);
+}
+var jsx = build;
+var jsxs = build;
+
+// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/components/Button/index.js
+var VARIANT_CLASSES = {
+  primary: "cursor-pointer rounded-md border border-transparent bg-accent px-3 py-1 text-[15px] font-medium text-white shadow-sm hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50 app-no-drag",
+  secondary: "cursor-pointer rounded-md border border-separator bg-control px-3 py-1 text-[15px] text-text shadow-sm hover:bg-selection disabled:cursor-not-allowed disabled:opacity-50 app-no-drag",
+  primaryDanger: "cursor-pointer rounded-md border border-transparent bg-danger px-3 py-1 text-[15px] font-medium text-white shadow-sm hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50 app-no-drag",
+  secondaryDanger: "cursor-pointer rounded-md border border-separator bg-control px-3 py-1 text-[15px] text-danger shadow-sm hover:bg-danger/15 disabled:cursor-not-allowed disabled:opacity-50 app-no-drag",
+  toolbar: "cursor-pointer rounded-md border-none bg-transparent px-2 py-1 text-[15px] hover:bg-selection app-no-drag",
+  icon: "inline-flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded-md border-none bg-transparent text-muted opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 focus:opacity-100 focus-visible:opacity-100 hover:bg-selection hover:text-text app-no-drag",
+  iconDanger: "inline-flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded-md border-none bg-transparent text-muted opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 focus:opacity-100 focus-visible:opacity-100 hover:bg-danger/15 hover:text-danger app-no-drag"
+};
+function Button({ variant = "primary", className, type = "button", ...props }) {
+  const classes = className ? `${VARIANT_CLASSES[variant]} ${className}` : VARIANT_CLASSES[variant];
+  return jsx("button", { type, className: classes, ...props });
+}
+
+// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/runtime/react.js
 function hook(name) {
   const react = requireHostReact();
   const fn = react[name];
@@ -168,13 +197,67 @@ function useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot) {
   return hook("useSyncExternalStore")(subscribe, getSnapshot, getServerSnapshot);
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.4.3_react@19.2.7/node_modules/@harborclient/sdk/dist/ui/format.js
+// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/components/Badge/index.js
+function variantClasses(variant) {
+  switch (variant) {
+    case "success":
+      return "bg-success/20 text-success";
+    case "danger":
+      return "bg-danger/20 text-danger";
+    case "accent":
+      return "bg-accent/20 text-accent";
+    case "muted":
+    default:
+      return "bg-control text-muted";
+  }
+}
+function Badge({ children, variant = "muted", className }) {
+  const base = `inline-flex shrink-0 items-center rounded px-1.5 py-0.5 text-[14px] ${variantClasses(variant)}`;
+  const classes = className ? `${base} ${className}` : base;
+  return jsx("span", { className: classes, children });
+}
+
+// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/runtime/store.js
+function createExternalStore(initial) {
+  let state = initial;
+  const listeners = /* @__PURE__ */ new Set();
+  return {
+    subscribe: (listener) => {
+      listeners.add(listener);
+      return () => {
+        listeners.delete(listener);
+      };
+    },
+    getSnapshot: () => state,
+    setState: (next) => {
+      state = next;
+      for (const listener of listeners) {
+        listener();
+      }
+    }
+  };
+}
+
+// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/components/EmptyState/index.js
+function variantClasses2(variant) {
+  if (variant === "centered") {
+    return "flex flex-1 items-center justify-center p-4 text-center text-[14px] text-muted";
+  }
+  return "text-[14px] text-muted";
+}
+function EmptyState({ children, variant = "inline", className }) {
+  const base = variantClasses2(variant);
+  const classes = className ? `${base} ${className}` : base;
+  return jsx("div", { className: classes, children });
+}
+
+// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/ui/format.js
 function formatHeaders(headers) {
   const lines = Object.entries(headers).map(([key, value]) => `${key}: ${value}`);
   return lines.length > 0 ? lines.join("\n") : "(none)";
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.4.3_react@19.2.7/node_modules/@harborclient/sdk/dist/ui/tokens.js
+// node_modules/.pnpm/@harborclient+sdk@0.5.0_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_1ce3235504e871aa5dbe742de87ddfcd/node_modules/@harborclient/sdk/dist/ui/tokens.js
 var METHOD_CLASSES = {
   get: "text-method-get",
   post: "text-method-post",
@@ -200,20 +283,6 @@ function statusColorClass(status) {
   return "bg-info";
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.4.3_react@19.2.7/node_modules/@harborclient/sdk/dist/runtime/jsx-runtime.js
-var Fragment = Symbol.for("@harborclient/sdk.Fragment");
-function build(type, props, key) {
-  const react = requireHostReact();
-  const elementType = type === Fragment ? react.Fragment : type;
-  const { children, ...rest } = props ?? {};
-  if (key !== void 0) {
-    rest.key = key;
-  }
-  return react.createElement(elementType, rest, children);
-}
-var jsx = build;
-var jsxs = build;
-
 // src/renderer/HistoryEntryRow.tsx
 function HistoryEntryRow({ entry, expanded, onToggle }) {
   const methodClass = methodColorClass(entry.method);
@@ -221,10 +290,10 @@ function HistoryEntryRow({ entry, expanded, onToggle }) {
   const detailsId = `history-entry-${entry.id}-details`;
   return /* @__PURE__ */ jsxs("div", { className: "border-b border-separator last:border-b-0", children: [
     /* @__PURE__ */ jsxs(
-      "button",
+      Button,
       {
-        type: "button",
-        className: "flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-left text-[14px] hover:bg-selection/60 app-no-drag",
+        variant: "toolbar",
+        className: "flex w-full items-center gap-2 px-3 py-2 text-left text-[14px] hover:bg-selection/60",
         "aria-expanded": expanded,
         "aria-controls": detailsId,
         onClick: onToggle,
@@ -232,30 +301,15 @@ function HistoryEntryRow({ entry, expanded, onToggle }) {
           /* @__PURE__ */ jsx(
             "span",
             {
-              className: `inline-block h-2 w-2 shrink-0 rounded-full ${statusColorClass(
-                entry.status
-              )}`,
+              className: `inline-block h-2 w-2 shrink-0 rounded-full ${statusColorClass(entry.status)}`,
               "aria-hidden": "true"
             }
           ),
-          /* @__PURE__ */ jsx(
-            "span",
-            {
-              className: `shrink-0 px-1.5 py-0.5 text-[14px] uppercase ${methodClass}`,
-              children: entry.method
-            }
-          ),
+          /* @__PURE__ */ jsx("span", { className: `shrink-0 px-1.5 py-0.5 text-[14px] uppercase ${methodClass}`, children: entry.method }),
           /* @__PURE__ */ jsx("span", { className: "min-w-0 flex-1 truncate font-mono text-[14px] text-text", children: entry.url }),
           /* @__PURE__ */ jsx("span", { className: "shrink-0 text-muted", children: statusLabel }),
           /* @__PURE__ */ jsx("span", { className: "shrink-0 text-[14px] text-muted", children: new Date(entry.timestamp).toLocaleTimeString() }),
-          entry.truncated && /* @__PURE__ */ jsx(
-            "span",
-            {
-              className: "shrink-0 text-[14px] text-warning",
-              title: "Body truncated",
-              children: "truncated"
-            }
-          ),
+          entry.truncated && /* @__PURE__ */ jsx(Badge, { variant: "muted", className: "shrink-0 text-warning", children: "truncated" }),
           /* @__PURE__ */ jsx("span", { className: "shrink-0 text-muted", "aria-hidden": "true", children: expanded ? "\u25BE" : "\u25B8" })
         ]
       }
@@ -303,38 +357,13 @@ async function saveHistoryEntries(storage, entries) {
   await storage.set(STORAGE_KEY, entries);
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.4.3_react@19.2.7/node_modules/@harborclient/sdk/dist/runtime/store.js
-function createExternalStore(initial) {
-  let state = initial;
-  const listeners = /* @__PURE__ */ new Set();
-  return {
-    subscribe: (listener) => {
-      listeners.add(listener);
-      return () => {
-        listeners.delete(listener);
-      };
-    },
-    getSnapshot: () => state,
-    setState: (next) => {
-      state = next;
-      for (const listener of listeners) {
-        listener();
-      }
-    }
-  };
-}
-
 // src/renderer/historyStore.ts
 var historyStore = createExternalStore([]);
 
 // src/renderer/HistoryPanel.tsx
 function HistoryPanel({ hc }) {
   const { storage } = hc;
-  const entries = useSyncExternalStore(
-    historyStore.subscribe,
-    historyStore.getSnapshot,
-    () => []
-  );
+  const entries = useSyncExternalStore(historyStore.subscribe, historyStore.getSnapshot, () => []);
   const [expandedId, setExpandedId] = useState(null);
   const [confirmClear, setConfirmClear] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -362,38 +391,19 @@ function HistoryPanel({ hc }) {
       ] }),
       confirmClear ? /* @__PURE__ */ jsxs(Fragment, { children: [
         /* @__PURE__ */ jsx("span", { className: "text-[14px] font-normal text-muted", children: "Clear all history?" }),
-        /* @__PURE__ */ jsx(
-          "button",
-          {
-            type: "button",
-            className: "cursor-pointer rounded-md border border-separator bg-control px-3 py-1 text-[14px] font-normal text-text shadow-sm hover:bg-selection disabled:cursor-not-allowed disabled:opacity-50",
-            disabled: busy,
-            onClick: () => void handleClear(),
-            children: "Confirm"
-          }
-        ),
-        /* @__PURE__ */ jsx(
-          "button",
-          {
-            type: "button",
-            className: "cursor-pointer rounded-md border border-separator bg-control px-3 py-1 text-[14px] font-normal text-muted shadow-sm hover:bg-selection disabled:cursor-not-allowed disabled:opacity-50",
-            disabled: busy,
-            onClick: () => setConfirmClear(false),
-            children: "Cancel"
-          }
-        )
+        /* @__PURE__ */ jsx(Button, { variant: "secondaryDanger", disabled: busy, onClick: () => void handleClear(), children: "Confirm" }),
+        /* @__PURE__ */ jsx(Button, { variant: "secondary", disabled: busy, onClick: () => setConfirmClear(false), children: "Cancel" })
       ] }) : /* @__PURE__ */ jsx(
-        "button",
+        Button,
         {
-          type: "button",
-          className: "cursor-pointer rounded-md border border-separator bg-control px-3 py-1 text-[14px] font-normal text-text shadow-sm hover:bg-selection disabled:cursor-not-allowed disabled:opacity-50",
+          variant: "secondary",
           disabled: entries.length === 0 || busy,
           onClick: () => setConfirmClear(true),
           children: "Clear"
         }
       )
     ] }) }),
-    /* @__PURE__ */ jsx("div", { className: "min-h-0 flex-1 overflow-auto", role: "list", children: entries.length === 0 ? /* @__PURE__ */ jsx("p", { className: "px-3 py-4 text-[14px] text-muted", role: "status", children: "No requests recorded yet. Send a request to populate history." }) : entries.map((entry) => /* @__PURE__ */ jsx(
+    /* @__PURE__ */ jsx("div", { className: "min-h-0 flex-1 overflow-auto", role: "list", children: entries.length === 0 ? /* @__PURE__ */ jsx(EmptyState, { variant: "inline", className: "px-3 py-4", children: "No requests recorded yet. Send a request to populate history." }) : entries.map((entry) => /* @__PURE__ */ jsx(
       HistoryEntryRow,
       {
         entry,

@@ -1,10 +1,10 @@
-import { installReact } from "@harborclient/sdk";
-import type { PluginContext } from "@harborclient/sdk";
-import { toHistoryEntry } from "./historyCapture.js";
-import { HistoryPanel } from "./HistoryPanel.js";
-import { loadHistoryEntries, saveHistoryEntries } from "./historyStorage.js";
-import { historyStore } from "./historyStore.js";
-import { mergeHistoryEntries } from "../shared/historyEntry.js";
+import { installReact } from '@harborclient/sdk';
+import type { PluginContext } from '@harborclient/sdk';
+import { toHistoryEntry } from './historyCapture.js';
+import { HistoryPanel } from './HistoryPanel.js';
+import { loadHistoryEntries, saveHistoryEntries } from './historyStorage.js';
+import { historyStore } from './historyStore.js';
+import { mergeHistoryEntries } from '../shared/historyEntry.js';
 
 /**
  * Activates the request history renderer entry and registers the footer panel.
@@ -37,9 +37,9 @@ export function activate(hc: PluginContext): void {
 
   hc.subscriptions.push(
     hc.ui.registerFooterPanel({
-      id: "history",
-      title: "History",
-      Component: HistoryPanelHost,
+      id: 'history',
+      title: 'History',
+      Component: HistoryPanelHost
     })
   );
 }

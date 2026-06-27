@@ -1,8 +1,5 @@
-import {
-  randomId,
-  truncateBody as truncateBodyBytes,
-} from "@harborclient/sdk/runtime-utils";
-import { mergeById } from "@harborclient/sdk/storage";
+import { randomId, truncateBody as truncateBodyBytes } from '@harborclient/sdk/runtime-utils';
+import { mergeById } from '@harborclient/sdk/storage';
 
 /**
  * Maximum bytes stored per request or response body before truncation.
@@ -75,7 +72,7 @@ export interface HistoryEntry {
  * @returns Unique entry id string.
  */
 export function createEntryId(): string {
-  return randomId("entry");
+  return randomId('entry');
 }
 
 /**
@@ -108,6 +105,6 @@ export function mergeHistoryEntries(
 ): HistoryEntry[] {
   return mergeById(pending, existing, {
     cap: Number.MAX_SAFE_INTEGER,
-    idOf: (entry) => entry.id,
+    idOf: (entry) => entry.id
   });
 }
