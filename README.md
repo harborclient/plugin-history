@@ -2,6 +2,9 @@
 
 A HarborClient plugin that records every successful HTTP request and response in a persistent footer panel.
 
+![Screenshot](screenshot.png)
+
+
 ## Features
 
 - **History** footer toggle — slide-up panel matching Console and Variables
