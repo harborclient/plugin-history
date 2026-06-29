@@ -1,4 +1,4 @@
-// node_modules/.pnpm/@harborclient+sdk@0.6.4_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_d184475238b1583e54b2dda9ccf94873/node_modules/@harborclient/sdk/dist/runtime/reactHost.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.14_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_47d90e3f55246fd089138cc6a136d024/node_modules/@harborclient/sdk/dist/runtime/reactHost.js
 var hostReact = null;
 function setHostReact(react) {
   hostReact = react;
@@ -12,12 +12,12 @@ function requireHostReact() {
   return hostReact;
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.6.4_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_d184475238b1583e54b2dda9ccf94873/node_modules/@harborclient/sdk/dist/runtime/index.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.14_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_47d90e3f55246fd089138cc6a136d024/node_modules/@harborclient/sdk/dist/runtime/index.js
 function installReact(react) {
   setHostReact(react);
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.6.4_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_d184475238b1583e54b2dda9ccf94873/node_modules/@harborclient/sdk/dist/runtime-utils.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.14_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_47d90e3f55246fd089138cc6a136d024/node_modules/@harborclient/sdk/dist/runtime-utils.js
 function randomId(prefix = "id") {
   if (typeof globalThis.crypto?.randomUUID === "function") {
     return globalThis.crypto.randomUUID();
@@ -88,7 +88,7 @@ function truncateBody(body, maxBytes, suffix = `
   };
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.6.4_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_d184475238b1583e54b2dda9ccf94873/node_modules/@harborclient/sdk/dist/storage/cappedList.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.14_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_47d90e3f55246fd089138cc6a136d024/node_modules/@harborclient/sdk/dist/storage/cappedList.js
 function mergeById(pending, existing, options) {
   if (pending.length === 0) {
     return existing.slice(0, options.cap);
@@ -149,7 +149,7 @@ function toHistoryEntry(request, response) {
   };
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.6.4_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_d184475238b1583e54b2dda9ccf94873/node_modules/@harborclient/sdk/dist/runtime/jsx-runtime.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.14_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_47d90e3f55246fd089138cc6a136d024/node_modules/@harborclient/sdk/dist/runtime/jsx-runtime.js
 var Fragment = Symbol.for("@harborclient/sdk.Fragment");
 function build(type, props, key) {
   const react = requireHostReact();
@@ -163,7 +163,7 @@ function build(type, props, key) {
 var jsx = build;
 var jsxs = build;
 
-// node_modules/.pnpm/@harborclient+sdk@0.6.4_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_d184475238b1583e54b2dda9ccf94873/node_modules/@harborclient/sdk/dist/components/Button/index.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.14_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_47d90e3f55246fd089138cc6a136d024/node_modules/@harborclient/sdk/dist/components/Button/index.js
 var VARIANT_CLASSES = {
   primary: "inline-flex min-h-[34px] cursor-pointer items-center justify-center rounded-md border border-transparent bg-accent px-3 py-1 text-[15px] font-medium text-white shadow-sm hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50 app-no-drag",
   secondary: "inline-flex min-h-[34px] cursor-pointer items-center justify-center rounded-md border border-separator bg-control px-3 py-1 text-[15px] text-text shadow-sm hover:bg-selection disabled:cursor-not-allowed disabled:opacity-50 app-no-drag",
@@ -178,7 +178,7 @@ function Button({ variant = "primary", className, type = "button", innerRef, ...
   return jsx("button", { ref: innerRef, type, className: classes, ...props });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.6.4_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_d184475238b1583e54b2dda9ccf94873/node_modules/@harborclient/sdk/dist/runtime/react.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.14_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_47d90e3f55246fd089138cc6a136d024/node_modules/@harborclient/sdk/dist/runtime/react.js
 function hook(name) {
   const react = requireHostReact();
   const fn = react[name];
@@ -197,7 +197,7 @@ function useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot) {
   return hook("useSyncExternalStore")(subscribe, getSnapshot, getServerSnapshot);
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.6.4_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_d184475238b1583e54b2dda9ccf94873/node_modules/@harborclient/sdk/dist/components/Badge/index.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.14_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_47d90e3f55246fd089138cc6a136d024/node_modules/@harborclient/sdk/dist/components/Badge/index.js
 function variantClasses(variant) {
   switch (variant) {
     case "success":
@@ -217,7 +217,7 @@ function Badge({ children, variant = "muted", className }) {
   return jsx("span", { className: classes, children });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.6.4_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_d184475238b1583e54b2dda9ccf94873/node_modules/@harborclient/sdk/dist/runtime/store.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.14_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_47d90e3f55246fd089138cc6a136d024/node_modules/@harborclient/sdk/dist/runtime/store.js
 function createExternalStore(initial) {
   let state = initial;
   const listeners = /* @__PURE__ */ new Set();
@@ -238,7 +238,7 @@ function createExternalStore(initial) {
   };
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.6.4_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_d184475238b1583e54b2dda9ccf94873/node_modules/@harborclient/sdk/dist/components/EmptyState/index.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.14_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_47d90e3f55246fd089138cc6a136d024/node_modules/@harborclient/sdk/dist/components/EmptyState/index.js
 function variantClasses2(variant) {
   if (variant === "centered") {
     return "flex flex-1 items-center justify-center p-4 text-center text-[14px] text-muted";
@@ -251,13 +251,13 @@ function EmptyState({ children, variant = "inline", className }) {
   return jsx("div", { className: classes, children });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.6.4_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_d184475238b1583e54b2dda9ccf94873/node_modules/@harborclient/sdk/dist/ui/format.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.14_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_47d90e3f55246fd089138cc6a136d024/node_modules/@harborclient/sdk/dist/ui/format.js
 function formatHeaders(headers) {
   const lines = Object.entries(headers).map(([key, value]) => `${key}: ${value}`);
   return lines.length > 0 ? lines.join("\n") : "(none)";
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.6.4_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search@_d184475238b1583e54b2dda9ccf94873/node_modules/@harborclient/sdk/dist/ui/tokens.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.14_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_47d90e3f55246fd089138cc6a136d024/node_modules/@harborclient/sdk/dist/ui/tokens.js
 var METHOD_CLASSES = {
   get: "text-method-get",
   post: "text-method-post",
