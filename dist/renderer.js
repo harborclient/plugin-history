@@ -1,9 +1,26 @@
-// node_modules/.pnpm/@harborclient+sdk@0.6.14_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_47d90e3f55246fd089138cc6a136d024/node_modules/@harborclient/sdk/dist/runtime/reactHost.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.17_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_da6e640abe955288df0f2b6277b11b07/node_modules/@harborclient/sdk/dist/runtime/reactHost.js
+var HOST_REACT_GLOBAL_KEY = "__HARBORCLIENT_HOST_REACT__";
 var hostReact = null;
+function readGlobalHostReact() {
+  if (typeof globalThis === "undefined") {
+    return null;
+  }
+  const candidate = globalThis[HOST_REACT_GLOBAL_KEY];
+  return candidate ?? null;
+}
 function setHostReact(react) {
   hostReact = react;
+  if (typeof globalThis !== "undefined") {
+    globalThis[HOST_REACT_GLOBAL_KEY] = react;
+  }
 }
 function requireHostReact() {
+  if (hostReact == null) {
+    const globalReact = readGlobalHostReact();
+    if (globalReact != null) {
+      hostReact = globalReact;
+    }
+  }
   if (hostReact == null) {
     throw new Error(
       "Plugin React host is not installed. Call installReact(hc.react) at the start of activate()."
@@ -12,12 +29,186 @@ function requireHostReact() {
   return hostReact;
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.6.14_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_47d90e3f55246fd089138cc6a136d024/node_modules/@harborclient/sdk/dist/runtime/index.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.17_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_da6e640abe955288df0f2b6277b11b07/node_modules/@harborclient/sdk/dist/runtime/index.js
 function installReact(react) {
   setHostReact(react);
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.6.14_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_47d90e3f55246fd089138cc6a136d024/node_modules/@harborclient/sdk/dist/runtime-utils.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.17_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_da6e640abe955288df0f2b6277b11b07/node_modules/@harborclient/sdk/dist/runtime/react.js
+function hook(name) {
+  const react = requireHostReact();
+  const fn = react[name];
+  if (typeof fn !== "function") {
+    throw new Error(`React hook "${String(name)}" is not available on hc.react.`);
+  }
+  return fn;
+}
+function useState(initialState) {
+  return hook("useState")(initialState);
+}
+function useEffect(effect, deps) {
+  return hook("useEffect")(effect, deps);
+}
+function useCallback(callback, deps) {
+  return hook("useCallback")(callback, deps);
+}
+function useMemo(factory, deps) {
+  return hook("useMemo")(factory, deps);
+}
+function useRef(initialValue) {
+  return hook("useRef")(initialValue);
+}
+function useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot) {
+  return hook("useSyncExternalStore")(subscribe, getSnapshot, getServerSnapshot);
+}
+function forwardRef(render) {
+  let forwarded = null;
+  function LazyForwardRef(props, ref) {
+    const react = requireHostReact();
+    if (forwarded === null) {
+      forwarded = react.forwardRef(render);
+    }
+    return react.createElement(forwarded, { ...props, ref });
+  }
+  const displayName = render.displayName ?? render.name ?? "Component";
+  LazyForwardRef.displayName = `ForwardRef(${displayName})`;
+  return LazyForwardRef;
+}
+function useImperativeHandle(ref, create, deps) {
+  return hook("useImperativeHandle")(ref, create, deps);
+}
+function cloneElement(element, props, ...children) {
+  return hook("cloneElement")(element, props, ...children);
+}
+function isValidElement(element) {
+  return hook("isValidElement")(element);
+}
+function createContext(defaultValue) {
+  return hook("createContext")(defaultValue);
+}
+function useContext(context) {
+  return hook("useContext")(context);
+}
+function useId() {
+  return hook("useId")();
+}
+function useLayoutEffect(effect, deps) {
+  return hook("useLayoutEffect")(effect, deps);
+}
+function createElement(type, props, ...children) {
+  return hook("createElement")(type, props, ...children);
+}
+var reactNamespace = {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+  useSyncExternalStore,
+  forwardRef,
+  useImperativeHandle,
+  cloneElement,
+  isValidElement,
+  createContext,
+  useContext,
+  useId,
+  useLayoutEffect,
+  createElement
+};
+var defaultExport = new Proxy(reactNamespace, {
+  get(target, prop, receiver) {
+    if (prop in target) {
+      return Reflect.get(target, prop, receiver);
+    }
+    return requireHostReact()[prop];
+  }
+});
+
+// node_modules/.pnpm/@harborclient+sdk@0.6.17_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_da6e640abe955288df0f2b6277b11b07/node_modules/@harborclient/sdk/dist/runtime/store.js
+function createExternalStore(initial) {
+  let state = initial;
+  const listeners = /* @__PURE__ */ new Set();
+  return {
+    subscribe: (listener) => {
+      listeners.add(listener);
+      return () => {
+        listeners.delete(listener);
+      };
+    },
+    getSnapshot: () => state,
+    setState: (next) => {
+      state = next;
+      for (const listener of listeners) {
+        listener();
+      }
+    }
+  };
+}
+function defaultEquals(a, b) {
+  return JSON.stringify(a) === JSON.stringify(b);
+}
+function createStorageStore(options) {
+  const { storage, key, parse, equals = defaultEquals, keepCurrentWhenMissing = false } = options;
+  const external = createExternalStore(parse(void 0));
+  async function reloadFromStorage() {
+    const raw = await storage.get(key);
+    if (raw === void 0 && keepCurrentWhenMissing) {
+      return;
+    }
+    const next = parse(raw);
+    const current = external.getSnapshot();
+    if (!equals(current, next)) {
+      external.setState(next);
+    }
+  }
+  async function set(next) {
+    const current = external.getSnapshot();
+    if (equals(current, next)) {
+      return;
+    }
+    external.setState(next);
+    await storage.set(key, next);
+  }
+  function useValue() {
+    return useSyncExternalStore(external.subscribe, external.getSnapshot, external.getSnapshot);
+  }
+  return {
+    subscribe: external.subscribe,
+    getSnapshot: external.getSnapshot,
+    useValue,
+    reloadFromStorage,
+    set
+  };
+}
+function setIntervalDisposable(callback, intervalMs) {
+  const timer = setInterval(callback, intervalMs);
+  return {
+    dispose: () => {
+      clearInterval(timer);
+    }
+  };
+}
+function syncOnWindowFocus(stores, options) {
+  const list = Array.isArray(stores) ? stores : [stores];
+  const reload = () => {
+    for (const store of list) {
+      void store.reloadFromStorage();
+    }
+  };
+  window.addEventListener("focus", reload);
+  document.addEventListener("visibilitychange", reload);
+  reload();
+  const intervalDisposable = options?.intervalMs !== void 0 ? setIntervalDisposable(reload, options.intervalMs) : null;
+  return {
+    dispose: () => {
+      window.removeEventListener("focus", reload);
+      document.removeEventListener("visibilitychange", reload);
+      intervalDisposable?.dispose();
+    }
+  };
+}
+
+// node_modules/.pnpm/@harborclient+sdk@0.6.17_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_da6e640abe955288df0f2b6277b11b07/node_modules/@harborclient/sdk/dist/runtime-utils.js
 function randomId(prefix = "id") {
   if (typeof globalThis.crypto?.randomUUID === "function") {
     return globalThis.crypto.randomUUID();
@@ -88,7 +279,7 @@ function truncateBody(body, maxBytes, suffix = `
   };
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.6.14_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_47d90e3f55246fd089138cc6a136d024/node_modules/@harborclient/sdk/dist/storage/cappedList.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.17_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_da6e640abe955288df0f2b6277b11b07/node_modules/@harborclient/sdk/dist/storage/cappedList.js
 function mergeById(pending, existing, options) {
   if (pending.length === 0) {
     return existing.slice(0, options.cap);
@@ -149,7 +340,7 @@ function toHistoryEntry(request, response) {
   };
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.6.14_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_47d90e3f55246fd089138cc6a136d024/node_modules/@harborclient/sdk/dist/runtime/jsx-runtime.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.17_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_da6e640abe955288df0f2b6277b11b07/node_modules/@harborclient/sdk/dist/runtime/jsx-runtime.js
 var Fragment = Symbol.for("@harborclient/sdk.Fragment");
 function build(type, props, key) {
   const react = requireHostReact();
@@ -163,7 +354,7 @@ function build(type, props, key) {
 var jsx = build;
 var jsxs = build;
 
-// node_modules/.pnpm/@harborclient+sdk@0.6.14_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_47d90e3f55246fd089138cc6a136d024/node_modules/@harborclient/sdk/dist/components/Button/index.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.17_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_da6e640abe955288df0f2b6277b11b07/node_modules/@harborclient/sdk/dist/components/Button/index.js
 var VARIANT_CLASSES = {
   primary: "inline-flex min-h-[34px] cursor-pointer items-center justify-center rounded-md border border-transparent bg-accent px-3 py-1 text-[15px] font-medium text-white shadow-sm hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50 app-no-drag",
   secondary: "inline-flex min-h-[34px] cursor-pointer items-center justify-center rounded-md border border-separator bg-control px-3 py-1 text-[15px] text-text shadow-sm hover:bg-selection disabled:cursor-not-allowed disabled:opacity-50 app-no-drag",
@@ -178,26 +369,7 @@ function Button({ variant = "primary", className, type = "button", innerRef, ...
   return jsx("button", { ref: innerRef, type, className: classes, ...props });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.6.14_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_47d90e3f55246fd089138cc6a136d024/node_modules/@harborclient/sdk/dist/runtime/react.js
-function hook(name) {
-  const react = requireHostReact();
-  const fn = react[name];
-  if (typeof fn !== "function") {
-    throw new Error(`React hook "${String(name)}" is not available on hc.react.`);
-  }
-  return fn;
-}
-function useState(initialState) {
-  return hook("useState")(initialState);
-}
-function useCallback(callback, deps) {
-  return hook("useCallback")(callback, deps);
-}
-function useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot) {
-  return hook("useSyncExternalStore")(subscribe, getSnapshot, getServerSnapshot);
-}
-
-// node_modules/.pnpm/@harborclient+sdk@0.6.14_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_47d90e3f55246fd089138cc6a136d024/node_modules/@harborclient/sdk/dist/components/Badge/index.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.17_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_da6e640abe955288df0f2b6277b11b07/node_modules/@harborclient/sdk/dist/components/Badge/index.js
 function variantClasses(variant) {
   switch (variant) {
     case "success":
@@ -217,28 +389,7 @@ function Badge({ children, variant = "muted", className }) {
   return jsx("span", { className: classes, children });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.6.14_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_47d90e3f55246fd089138cc6a136d024/node_modules/@harborclient/sdk/dist/runtime/store.js
-function createExternalStore(initial) {
-  let state = initial;
-  const listeners = /* @__PURE__ */ new Set();
-  return {
-    subscribe: (listener) => {
-      listeners.add(listener);
-      return () => {
-        listeners.delete(listener);
-      };
-    },
-    getSnapshot: () => state,
-    setState: (next) => {
-      state = next;
-      for (const listener of listeners) {
-        listener();
-      }
-    }
-  };
-}
-
-// node_modules/.pnpm/@harborclient+sdk@0.6.14_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_47d90e3f55246fd089138cc6a136d024/node_modules/@harborclient/sdk/dist/components/EmptyState/index.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.17_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_da6e640abe955288df0f2b6277b11b07/node_modules/@harborclient/sdk/dist/components/EmptyState/index.js
 function variantClasses2(variant) {
   if (variant === "centered") {
     return "flex flex-1 items-center justify-center p-4 text-center text-[14px] text-muted";
@@ -251,13 +402,13 @@ function EmptyState({ children, variant = "inline", className }) {
   return jsx("div", { className: classes, children });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.6.14_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_47d90e3f55246fd089138cc6a136d024/node_modules/@harborclient/sdk/dist/ui/format.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.17_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_da6e640abe955288df0f2b6277b11b07/node_modules/@harborclient/sdk/dist/ui/format.js
 function formatHeaders(headers) {
   const lines = Object.entries(headers).map(([key, value]) => `${key}: ${value}`);
   return lines.length > 0 ? lines.join("\n") : "(none)";
 }
 
-// node_modules/.pnpm/@harborclient+sdk@0.6.14_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_47d90e3f55246fd089138cc6a136d024/node_modules/@harborclient/sdk/dist/ui/tokens.js
+// node_modules/.pnpm/@harborclient+sdk@0.6.17_@babel+runtime@8.0.0_@codemirror+lint@6.9.7_@codemirror+search_da6e640abe955288df0f2b6277b11b07/node_modules/@harborclient/sdk/dist/ui/tokens.js
 var METHOD_CLASSES = {
   get: "text-method-get",
   post: "text-method-post",
@@ -343,41 +494,22 @@ function HistoryEntryRow({ entry, expanded, onToggle }) {
   ] });
 }
 
-// src/shared/constants.ts
-var STORAGE_KEY = "entries";
-
-// src/renderer/historyStorage.ts
-async function loadHistoryEntries(storage) {
-  return await storage.get(STORAGE_KEY) ?? [];
-}
-async function clearHistoryEntries(storage) {
-  await storage.set(STORAGE_KEY, []);
-}
-async function saveHistoryEntries(storage, entries) {
-  await storage.set(STORAGE_KEY, entries);
-}
-
-// src/renderer/historyStore.ts
-var historyStore = createExternalStore([]);
-
 // src/renderer/HistoryPanel.tsx
-function HistoryPanel({ hc }) {
-  const { storage } = hc;
-  const entries = useSyncExternalStore(historyStore.subscribe, historyStore.getSnapshot, () => []);
+function HistoryPanel({ store }) {
+  const entries = store.useValue();
   const [expandedId, setExpandedId] = useState(null);
   const [confirmClear, setConfirmClear] = useState(false);
   const [busy, setBusy] = useState(false);
   const handleClear = useCallback(async () => {
     setBusy(true);
     try {
-      await clearHistoryEntries(storage);
-      historyStore.setState([]);
+      await store.set([]);
       setExpandedId(null);
       setConfirmClear(false);
     } finally {
       setBusy(false);
     }
-  }, [storage]);
+  }, [store]);
   const toggleExpanded = useCallback((id) => {
     setExpandedId((current) => current === id ? null : id);
   }, []);
@@ -415,23 +547,36 @@ function HistoryPanel({ hc }) {
   ] });
 }
 
-// src/renderer/index.tsx
-function activate(hc) {
-  installReact(hc.react);
-  void loadHistoryEntries(hc.storage).then((entries) => {
-    historyStore.setState(entries);
+// src/shared/constants.ts
+var STORAGE_KEY = "entries";
+
+// src/renderer/historyStore.ts
+function parseHistoryEntries(raw) {
+  return Array.isArray(raw) ? raw : [];
+}
+function createHistoryStore(hc) {
+  return createStorageStore({
+    storage: hc.storage,
+    key: STORAGE_KEY,
+    parse: parseHistoryEntries
   });
+}
+
+// src/renderer/index.tsx
+async function activate(hc) {
+  installReact(hc.react);
+  const historyStore = createHistoryStore(hc);
+  await historyStore.reloadFromStorage();
+  hc.subscriptions.push(syncOnWindowFocus(historyStore));
   hc.subscriptions.push(
     hc.http.onAfterSend(async (request, response) => {
       const entry = toHistoryEntry(request, response);
-      const existing = historyStore.getSnapshot();
-      const merged = mergeHistoryEntries([entry], existing);
-      await saveHistoryEntries(hc.storage, merged);
-      historyStore.setState(merged);
+      const merged = mergeHistoryEntries([entry], historyStore.getSnapshot());
+      await historyStore.set(merged);
     })
   );
   function HistoryPanelHost() {
-    return /* @__PURE__ */ jsx(HistoryPanel, { hc });
+    return /* @__PURE__ */ jsx(HistoryPanel, { store: historyStore });
   }
   hc.subscriptions.push(
     hc.ui.registerFooterPanel({
@@ -442,7 +587,6 @@ function activate(hc) {
   );
 }
 function deactivate() {
-  historyStore.setState([]);
 }
 export {
   activate,

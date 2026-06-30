@@ -1,24 +1,21 @@
 import { Button, EmptyState } from '@harborclient/sdk/components';
-import type { PluginContext } from '@harborclient/sdk';
-import { useCallback, useState, useSyncExternalStore } from '@harborclient/sdk/react';
+import type { StorageStore } from '@harborclient/sdk/store';
+import { useCallback, useState } from '@harborclient/sdk/react';
 import { HistoryEntryRow } from './HistoryEntryRow.js';
-import { clearHistoryEntries } from './historyStorage.js';
-import { historyStore } from './historyStore.js';
+import type { HistoryEntry } from '../shared/historyEntry.js';
 
 interface Props {
   /**
-   * Renderer plugin context from the host.
+   * Storage-backed history store for this webview activation.
    */
-  hc: PluginContext;
+  store: StorageStore<HistoryEntry[]>;
 }
 
 /**
- * Footer History panel: renders captured requests from the module store.
+ * Footer History panel: renders captured requests from the storage-backed store.
  */
-export function HistoryPanel({ hc }: Props) {
-  const { storage } = hc;
-
-  const entries = useSyncExternalStore(historyStore.subscribe, historyStore.getSnapshot, () => []);
+export function HistoryPanel({ store }: Props) {
+  const entries = store.useValue();
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [confirmClear, setConfirmClear] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -29,14 +26,13 @@ export function HistoryPanel({ hc }: Props) {
   const handleClear = useCallback(async (): Promise<void> => {
     setBusy(true);
     try {
-      await clearHistoryEntries(storage);
-      historyStore.setState([]);
+      await store.set([]);
       setExpandedId(null);
       setConfirmClear(false);
     } finally {
       setBusy(false);
     }
-  }, [storage]);
+  }, [store]);
 
   /**
    * Toggles expanded state for one history row.

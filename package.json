@@ -1,6 +1,5 @@
 {
   "name": "@harborclient/plugin-history",
-  "version": "1.0.6",
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",
@@ -15,18 +14,14 @@
     "plugin:verify": "node --experimental-strip-types scripts/plugin-verify.ts"
   },
   "dependencies": {
-    "@harborclient/sdk": "^0.6.14"
+    "@harborclient/sdk": "^0.6.17"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
     "@types/node": "^26.0.1",
     "@types/react": "^19.0.0",
-    "esbuild": "^0.25.0",
     "eslint": "^10.5.0",
-    "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.8.4",
     "typescript": "^5.8.0",
-    "typescript-eslint": "^8.62.0",
     "vitest": "^3.2.0"
   }
 }

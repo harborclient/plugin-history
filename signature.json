@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "pluginId": "com.harborclient.plugins.history",
-  "pluginVersion": "1.0.6",
+  "pluginVersion": "1.0.7",
   "algorithm": "Ed25519",
   "files": [
     {
       "path": ".eslintcache",
-      "sha256": "7f11bd30ef24c1bf9b4447ad13b7e1213c3102c0586e1dddc38bc39107a5d988"
+      "sha256": "6dbdc5797c5db1068a1a6073471077ee54d75e583fc311fe1e3c07ef8aadee3a"
     },
     {
       "path": ".gitignore",
@@ -22,23 +22,23 @@
     },
     {
       "path": "dist/renderer.js",
-      "sha256": "c6a2769210b2ca898b99c3ea276f55aac1c9e0b90e025fa07518621933d270df"
+      "sha256": "195af29591f11aa1698ba8a4af7e9ac99eedd369cada40b7bf41d6eb9d4de0bc"
     },
     {
       "path": "eslint.config.mjs",
-      "sha256": "9b3e9cb152d0f4e901c42dec8ae980024f6d0425f2c71933ba5f8ad3839fd43b"
+      "sha256": "d74a66f91fd2bcd4d548f8fbff511fb47e4db06620ac137b29a8867e377c259d"
     },
     {
       "path": "manifest.json",
-      "sha256": "68fbcadd5f0fa5150bc60583ae6dd3b9f81b5ee6b31fb5557c229377b8dcce9b"
+      "sha256": "6dd2a77b9369e90e569e403d0fb68e2b7c6e2ae3caed57cc90d0844e34f3e213"
     },
     {
       "path": "package.json",
-      "sha256": "6aac34c9f04d0e87128789381b9f383cd3a7e921569c8386fea0558365c4b913"
+      "sha256": "d61f47793c64217a4c79a3816b0cd05e370d51f9a8b79a4c4722bbb495a970e1"
     },
     {
       "path": "pnpm-lock.yaml",
-      "sha256": "bcdf5de2cde2e259034f948433e8cfd49746be68862efbc9d913608c735417f5"
+      "sha256": "fcea4d52160f50b9e826daeb6a5cd302d23bbe3caa4f57594e4e8fe872fe1c83"
     },
     {
       "path": "README.md",
@@ -50,7 +50,7 @@
     },
     {
       "path": "scripts/build.mjs",
-      "sha256": "c9a4525eb621df21fd5b668040186511136cb81b0def39b4944697931bdacc36"
+      "sha256": "ea824ed43f049b91f2e33fe93b86ccd54736b07aa24138f0aa81d471afcff119"
     },
     {
       "path": "scripts/plugin-sign.ts",
@@ -82,19 +82,15 @@
     },
     {
       "path": "src/renderer/HistoryPanel.tsx",
-      "sha256": "5d45333160a1080349fec0a61a9962f400db77c0aae73c7cbad448f7776362ce"
-    },
-    {
-      "path": "src/renderer/historyStorage.ts",
-      "sha256": "3bad8009d0a879c344f746e3b5b81eb748046193667f846bb877b4eed8e791e9"
+      "sha256": "bf228238f95eb3f1f796debfa3aefc4f72accb68f84d6030aac0b78ddc54a8bf"
     },
     {
       "path": "src/renderer/historyStore.ts",
-      "sha256": "61350dad6548eecd5912fdb1b3454d41b0e4c4c16cb668bfb35a26e987b75ee7"
+      "sha256": "973478fd7bdadb7d220fca1fffdbe5f1614a1c9072aa8ab3391f91dbcc20c543"
     },
     {
       "path": "src/renderer/index.tsx",
-      "sha256": "a9dc4119bee68d11cbc7b7fa0e9a390830173e75d43316141d0d9f301a232ae9"
+      "sha256": "d7a54a84e1fc7f870d464d6573dfed48a90b33051094dd3d48ec6e3dee1bc3f5"
     },
     {
       "path": "src/shared/constants.ts",
@@ -110,12 +106,12 @@
     },
     {
       "path": "tsconfig.json",
-      "sha256": "dced0ea880bec6222ac9856d3d2ce11b91fd874298f3129c8b5944606dc73668"
+      "sha256": "663c22f2cb634722bc1c1191c4808b53c89d930979d4936cb6d0a539f4476ac9"
     },
     {
       "path": "vitest.config.ts",
       "sha256": "dab25d97b62585ce15993a9153ad79af552887aa57480b1ae5fd471f227e0280"
     }
   ],
-  "signature": "VOnQ0mrKh4BKFd/svjgzmKLm4WWq0JpI/O0aryAkftkuEdyeNEUlcp06mpqJzkmL1dl0qifQ5Rxs20gjjlZlCA=="
+  "signature": "FMMi+E9ZHliZS2/PgXmkEOZMmIidCTOJEDV+twD0+eJEaqC6G7vElyuIP2KbkpQ2/SSVk4UbKXyamf/vVsiJBA=="
 }

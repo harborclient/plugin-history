@@ -1,9 +1,9 @@
 import { installReact } from '@harborclient/sdk';
 import type { PluginContext } from '@harborclient/sdk';
+import { syncOnWindowFocus } from '@harborclient/sdk/store';
 import { toHistoryEntry } from './historyCapture.js';
 import { HistoryPanel } from './HistoryPanel.js';
-import { loadHistoryEntries, saveHistoryEntries } from './historyStorage.js';
-import { historyStore } from './historyStore.js';
+import { createHistoryStore } from './historyStore.js';
 import { mergeHistoryEntries } from '../shared/historyEntry.js';
 
 /**
@@ -11,28 +11,27 @@ import { mergeHistoryEntries } from '../shared/historyEntry.js';
  *
  * @param hc - Renderer plugin context from the host.
  */
-export function activate(hc: PluginContext): void {
+export async function activate(hc: PluginContext): Promise<void> {
   installReact(hc.react);
 
-  void loadHistoryEntries(hc.storage).then((entries) => {
-    historyStore.setState(entries);
-  });
+  const historyStore = createHistoryStore(hc);
+
+  await historyStore.reloadFromStorage();
+  hc.subscriptions.push(syncOnWindowFocus(historyStore));
 
   hc.subscriptions.push(
     hc.http.onAfterSend(async (request, response) => {
       const entry = toHistoryEntry(request, response);
-      const existing = historyStore.getSnapshot();
-      const merged = mergeHistoryEntries([entry], existing);
-      await saveHistoryEntries(hc.storage, merged);
-      historyStore.setState(merged);
+      const merged = mergeHistoryEntries([entry], historyStore.getSnapshot());
+      await historyStore.set(merged);
     })
   );
 
   /**
-   * Footer panel host wired to plugin storage and React from the host.
+   * Footer panel host wired to the storage-backed history store.
    */
   function HistoryPanelHost() {
-    return <HistoryPanel hc={hc} />;
+    return <HistoryPanel store={historyStore} />;
   }
 
   hc.subscriptions.push(
@@ -48,5 +47,5 @@ export function activate(hc: PluginContext): void {
  * Resets module state when the plugin deactivates.
  */
 export function deactivate(): void {
-  historyStore.setState([]);
+  // Each webview activation owns its own store instance; nothing to reset globally.
 }
