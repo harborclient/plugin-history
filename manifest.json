@@ -1,11 +1,16 @@
 {
   "id": "com.harborclient.plugins.history",
   "name": "Request History",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "author": "HarborClient",
   "description": "README.md",
+  "summary": "A HarborClient plugin that records every successful HTTP request and response in a persistent footer panel.",
+  "categories": ["requests", "logging"],
+  "screenshots": [
+    "https://raw.githubusercontent.com/harborclient/plugin-history/main/screenshot.png"
+  ],
   "engines": {
-    "harborclient": ">=1.8.4"
+    "harborclient": ">=1.9.0"
   },
   "renderer": "dist/renderer.js",
   "permissions": ["ui", "storage", "http"],
